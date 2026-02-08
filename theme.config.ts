@@ -3,20 +3,20 @@ import previewImage from '@assets/img/social-preview-image.png'
 import logoImage from '@assets/img/logo.svg'
 
 export default defineThemeConfig({
-  name: 'Accessible Astro',
-  id: 'accessible-astro-starter',
+  name: 'jquest.dev',
+  id: 'jquest-dev',
   logo: logoImage,
   seo: {
-    title: 'Accessible Astro Starter',
+    title: 'jquest.dev',
     description:
-      'An Accessible Starter Theme for Astro including several accessibility features and tools to help you build faster.',
-    author: 'Incluud',
+      'The personal site of Josh G. featuring projects, writing, and developer notes.',
+    author: 'Josh G.',
     image: previewImage, // Can also be a string e.g. '/social-preview-image.png',
   },
   colors: {
-    primary: '#d648ff',
-    secondary: '#00d1b7',
-    neutral: '#b9bec4',
+    primary: '#f18f01',
+    secondary: '#048ba8',
+    neutral: '#2e4057',
     outline: '#ff4500',
   },
   navigation: {
@@ -82,8 +82,8 @@ export default defineThemeConfig({
       },
       {
         type: 'link',
-        label: 'Go to our GitHub page, opens in new tab',
-        href: 'https://github.com/incluud/accessible-astro-starter',
+        label: 'Go to my GitHub page, opens in new tab',
+        href: 'https://github.com/shwaaa21',
         icon: 'lucide:github',
         external: true,
         excludeFromLauncher: true,
@@ -93,18 +93,8 @@ export default defineThemeConfig({
   socials: [
     {
       label: 'GitHub',
-      href: 'https://github.com/incluud/',
+      href: 'https://github.com/shwaaa21',
       icon: 'lucide:github',
-    },
-    {
-      label: 'Bluesky',
-      href: 'https://bsky.app/profile/incluud.dev',
-      icon: 'lucide:bot-message-square',
-    },
-    {
-      label: 'Open Collective',
-      href: 'https://opencollective.com/incluud',
-      icon: 'lucide:hand-heart',
     },
   ],
 })

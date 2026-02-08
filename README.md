@@ -1,8 +1,8 @@
-# My Personal Site
+# jquest.dev
 
 [![Built with Astro](https://astro.badg.es/v2/built-with-astro/small.svg)](https://astro.build)
 
-Welcome to my personal website! This site showcases my quest on becoming a better developer! It's gonna inlude work, random thoughts, and personal findings that may be useful, as a newly starting web developer.
+Welcome to jquest.dev, my personal website. This site showcases my quest to become a better developer, with work, random thoughts, and personal findings as a newly starting web developer. — Josh G.
 
 ## 🚀 Built With
 
