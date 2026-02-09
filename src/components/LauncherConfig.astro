@@ -8,12 +8,10 @@ import {
 } from 'accessible-astro-launcher'
 import { Icon } from 'astro-icon/components'
 import { getCollection } from 'astro:content'
-import { BLOG_API_URL } from 'astro:env/server'
 import themeConfig from '@theme-config'
-import { slugify } from '@utils/slugify'
 
 /**
- * Launcher preferences for accessibility and theme.
+ * Launcher preferences for theme and motion.
  * @type {Array<{ label: string, onAction: string }>}
  */
 const launcherPreferenceItems = [
@@ -38,8 +36,8 @@ const launcherPreferenceItems = [
 const maxLauncherBlogPosts = 30
 
 /**
- * Truncate blog post title to the first four words.
- * Used for generating short labels/URLs for launcher items.
+  * Truncate blog post title to the first four words.
+  * Used for generating short labels for launcher items.
  *
  * @param {string} title
  * @returns {string}
@@ -49,36 +47,19 @@ const truncateBlogTitle = (title: string): string => {
 }
 
 /**
- * Blog items for the launcher, fetched from `BLOG_API_URL`.
+ * Blog items for the launcher, sourced from the local blog collection.
  * Shows up to `maxLauncherBlogPosts` items.
  *
  * @type {Array<{ label: string, href: string }>}
  */
-const launcherBlogItems = await (async () => {
-  if (!BLOG_API_URL) return []
-
-  try {
-    const response = await fetch(BLOG_API_URL)
-    if (!response.ok) {
-      console.warn(`Failed to fetch blog posts: ${response.status} ${response.statusText}`)
-      return []
-    }
-
-    const data = (await response.json()) as Array<{ title: string }>
-
-    return data.slice(0, maxLauncherBlogPosts).map((post) => {
-      const truncatedTitle = truncateBlogTitle(post.title)
-      const shortUrl = slugify(truncatedTitle)
-
-      return {
-        label: truncatedTitle,
-        href: `/blog/${shortUrl}`,
-      }
-    })
-  } catch {
-    return []
-  }
-})()
+const launcherBlogItems = (await getCollection('blog'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
+  .slice(0, maxLauncherBlogPosts)
+  .map((post) => ({
+    label: truncateBlogTitle(post.data.title),
+    href: `/blog/${post.id}`,
+  }))
 
 /**
  * Project items for the launcher, sourced from the 'projects' collection.
@@ -135,32 +116,6 @@ const launcherSocialItems = (themeConfig.socials ?? []).map((item) => ({
   external: item.external ?? false,
 }))
 
-const launcherAccessibleAstroProjects = [
-  {
-    label: 'Accessible Astro Starter',
-    href: 'https://github.com/incluud/accessible-astro-starter',
-  },
-  {
-    label: 'Accessible Astro Dashboard',
-    href: 'https://github.com/incluud/accessible-astro-dashboard',
-  },
-  {
-    label: 'Accessible Astro Components',
-    href: 'https://github.com/incluud/accessible-astro-components',
-  },
-  {
-    label: 'Accessible Astro Docs',
-    href: 'https://github.com/incluud/accessible-astro-docs',
-  },
-  {
-    label: 'Accessible Astro Launcher',
-    href: 'https://github.com/incluud/accessible-astro-launcher',
-  },
-  {
-    label: 'Color Contrast Checker',
-    href: 'https://github.com/incluud/color-contrast-checker',
-  },
-]
 ---
 
 <Launcher id="site-launcher">
@@ -171,7 +126,7 @@ const launcherAccessibleAstroProjects = [
       ))
     }
   </LauncherPreferences>
-  <LauncherNav label="Navigate to">
+  <LauncherNav label="Pages">
     {
       launcherNavigationItems.map((item) => (
         <LauncherLink
@@ -184,7 +139,7 @@ const launcherAccessibleAstroProjects = [
   </LauncherNav>
   {
     launcherBlogItems.length > 0 && (
-      <LauncherNav label="Blog posts">
+      <LauncherNav label="Writing">
         {launcherBlogItems.map((item) => (
           <LauncherLink label={item.label} href={item.href}>
             <Icon slot="icon" aria-hidden="true" name="lucide:scroll-text" size="16" />
@@ -205,19 +160,8 @@ const launcherAccessibleAstroProjects = [
     )
   }
   {
-    launcherAccessibleAstroProjects.length > 0 && (
-      <LauncherNav label="Accessible Astro Projects">
-        {launcherAccessibleAstroProjects.map((item) => (
-          <LauncherLink label={item.label} href={item.href}>
-            <Icon slot="icon" aria-hidden="true" name="lucide:external-link" size="16" />
-          </LauncherLink>
-        ))}
-      </LauncherNav>
-    )
-  }
-  {
     launcherSocialItems.length > 0 && (
-      <LauncherNav label="Socials">
+      <LauncherNav label="Links">
         {launcherSocialItems.map((item) => (
           <LauncherLink
             label={item.label}

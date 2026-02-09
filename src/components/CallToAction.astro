@@ -10,25 +10,25 @@ import { Icon } from 'astro-icon/components'
 interface Props {
   /**
    * The title text to display
-   * @default "Find out more about this theme on GitHub"
+   * @default "Want to collaborate or talk work?"
    */
   title?: string
   /**
    * The URL the button should link to
-   * @default "https://github.com/shwaaa21/personal-astro-site"
+   * @default "/contact"
    */
   link?: string
   /**
    * The text to display on the button
-   * @default "Get Started"
+   * @default "Send a message"
    */
   linkText?: string
 }
 
 const {
-  title = 'Find out more about this theme on GitHub',
-  link = 'https://github.com/shwaaa21/personal-astro-site',
-  linkText = 'Check out theme',
+  title = 'Want to collaborate or talk work?',
+  link = '/contact',
+  linkText = 'Send a message',
 } = Astro.props
 ---
 

@@ -1,0 +1,38 @@
+---
+title: Shipping This Site With GitHub Pages + CI/CD
+description: Notes on how I wired up Astro, GitHub Actions, and GitHub Pages for a clean deploy workflow.
+publishDate: 2026-02-09
+tags:
+  - Astro
+  - GitHub Pages
+  - CI/CD
+  - Deployment
+heroImage: /posts/post-image-1.png
+draft: false
+---
+
+## Why GitHub Pages
+
+I wanted a zero-cost, low-maintenance deploy that still felt professional. GitHub Pages is perfect for static sites, and Astro makes it easy to generate a clean build.
+
+## The Flow
+
+This is the basic setup I landed on:
+
+1. Build the site on every push to `main`.
+2. Publish the `dist/` output to GitHub Pages.
+3. Keep the workflow simple and easy to debug.
+
+## What I Configured
+
+- Astro build output set to `dist/`.
+- GitHub Actions workflow that runs `npm ci` and `npm run build`.
+- GitHub Pages configured to deploy from the Actions workflow.
+
+## What I Like About It
+
+The deployment pipeline is reliable, fast, and doesn't need any manual intervention. Once it is set, I can focus on writing and shipping.
+
+## Next Iterations
+
+I plan to add a staging branch and run Lighthouse checks as part of the pipeline, but the current setup already feels solid.

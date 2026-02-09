@@ -4,11 +4,11 @@ import PageHeader from '@components/PageHeader.astro'
 import { Notification } from 'accessible-astro-components'
 ---
 
-<DefaultLayout title="Accessible launcher">
+<DefaultLayout title="Launcher">
   <section class="my-12">
     <PageHeader
-      title="Accessible launcher"
-      subtitle="This theme includes the Accessible Astro Launcher component from the <a href='https://github.com/incluud/accessible-astro-launcher'>Accessible Astro Launcher</a> NPM package to accelerate accessible development. For detailed documentation and usage examples, visit our <a href='https://accessible-astro-launcher.incluud.dev/'>documentation website</a>."
+      title="Launcher"
+      subtitle="A quick command palette for jumping between pages, posts, and projects."
       bgType="bordered"
     />
   </section>
@@ -16,10 +16,8 @@ import { Notification } from 'accessible-astro-components'
     <div class="narrow container">
       <Notification type="info" variant="accent">
         <p>
-          Try the Accessible Astro Launcher component by pressing <kbd class="kbd">Cmd + K</kbd> (Mac) or <kbd
-            class="kbd">Ctrl + K</kbd
-          > (Windows/Linux). The Launcher will open a dialog with a search input and a list of items. The search input is
-          automatically focused when the dialog opens.
+          Open the Launcher with <kbd class="kbd">Cmd + K</kbd> (Mac) or <kbd class="kbd">Ctrl + K</kbd> (Windows/Linux).
+          It focuses the search input so you can jump fast.
         </p>
       </Notification>
     </div>

@@ -17,63 +17,44 @@ const currentYear = new Date().getFullYear()
     <Heading level="h2" class="sr-only">Footer</Heading>
     <div class="container grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
       <div class="flex flex-col gap-4">
-        <Heading level="h3" size="h6">Features</Heading>
+        <Heading level="h3" size="h6">Explore</Heading>
         <ul class="flex flex-col gap-2">
-          <li><Link href="/accessibility-statement">Accessibility statement</Link></li>
-          <li><Link href="/accessible-components">Accessible components</Link></li>
-          <li><Link href="/color-contrast-checker">Color contrast checker</Link></li>
-          <li><Link href="/markdown-page">Markdown page</Link></li>
-          <li><Link href="/mdx-page">MDX page</Link></li>
-          <li><Link href="/404-page">404 page</Link></li>
-          <li><Link href="/sitemap">Sitemap</Link></li>
+          <li><Link href="/blog">Blog</Link></li>
+          <li><Link href="/portfolio">Projects</Link></li>
+          <li><Link href="/accessible-components">Toolkit</Link></li>
+          <li><Link href="/accessible-launcher">Launcher</Link></li>
+          <li><Link href="/color-contrast-checker">Colour Lab</Link></li>
+          <li><Link href="/sitemap">Index</Link></li>
         </ul>
       </div>
       <div class="flex flex-col gap-4">
-        <Heading level="h3" size="h6">Where to find me</Heading>
+        <Heading level="h3" size="h6">Contact</Heading>
         <ul class="flex flex-col gap-2">
-          <li>
-            <Link isExternal href="https://github.com/shwaaa21">Github Page</Link>
-          </li>
+          <li><Link href="/contact">Say hello</Link></li>
+          <li><Link href="mailto:josh_dev21@protonmail.com">josh_dev21@protonmail.com</Link></li>
+          <li>Yorkshire, UK</li>
         </ul>
       </div>
       <div class="flex flex-col gap-4">
-        <Heading level="h3" size="h6">Developer tools</Heading>
+        <Heading level="h3" size="h6">Elsewhere</Heading>
         <ul class="flex flex-col gap-2">
           <li>
-            <Link isExternal href="https://chrispederick.com/work/web-developer/">Web Developer Extension</Link>
-          </li>
-          <li>
-            <Link isExternal href="https://accessibilityinsights.io/">Accessibility Insights</Link>
-          </li>
-          <li>
-            <Link isExternal href="https://www.deque.com/axe/devtools/">axe DevTools</Link>
-          </li>
-          <li>
-            <Link isExternal href="https://wave.webaim.org/extension/">WAVE Web Accessibility</Link>
-          </li>
-          <li>
-            <Link isExternal href="https://www.w3.org/WAI/ARIA/apg/patterns/">ARIA Design Patterns</Link>
-          </li>
-          <li>
-            <Link isExternal href="https://aaardvarkaccessibility.com/wcag-plain-english/">WCAG Plain English</Link>
+            <Link isExternal href="https://github.com/shwaaa21">GitHub</Link>
           </li>
         </ul>
       </div>
       <div class="flex flex-col gap-4">
         <Logo loading="lazy" />
         <p class="leading-[1.75]">
-          Tip: always test for screen reader support. Press <kbd class="kbd">⌘</kbd> + <kbd class="kbd">F5</kbd> to start
-          VoiceOver or <kbd class="kbd">Win</kbd>
-          + <kbd class="kbd">Ctrl</kbd> + <kbd class="kbd">Enter</kbd> for Narrator.
+          Built as a personal space for projects, notes, and experiments.
         </p>
-        <p>Cute astronaut image by <Link href="https://unsplash.com/@kobbymendez">Kobby Mendez</Link> on Unsplash.</p>
       </div>
     </div>
   </section>
   <section class="py-8">
     <div class="container flex flex-col gap-4 md:flex-row md:justify-between">
       <p>
-        &copy; {currentYear} - Starter Theme for <Link href="https://astro.build/">Astro</Link>.
+        &copy; {currentYear} Josh G. Built with <Link href="https://astro.build/">Astro</Link>.
       </p>
     </div>
   </section>

@@ -1,16 +1,18 @@
 ---
 layout: ../layouts/MarkdownLayout.astro
-title: Markdown Page
+title: Notes
 ---
 
-# Markdown Page
+# Notes
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae veniam repellat deleniti obcaecati facilis non, praesentium aperiam laudantium excepturi assumenda doloremque animi quis aliquam eligendi quia nemo asperiores et eaque, sunt voluptatibus, saepe exercitationem id. Quis sequi maxime fugiat nam reprehenderit nesciunt quaerat obcaecati, ipsa dignissimos voluptatum voluptatem, optio quidem quos repudiandae dolorem voluptatibus fuga officia odio nemo recusandae voluptas.
+Quick markdown space for rough ideas, checklists, and quick links.
 
-```js
-console.log('Hello Accessible World!')
+```md
+- Draft post outlines
+- Links worth keeping
+- Small wins from the week
 ```
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae veniam repellat deleniti obcaecati facilis non, praesentium aperiam laudantium excepturi assumenda doloremque animi quis aliquam eligendi quia nemo asperiores et eaque, sunt voluptatibus, saepe exercitationem id. Quis sequi maxime fugiat nam reprehenderit nesciunt quaerat obcaecati, ipsa dignissimos voluptatum voluptatem, optio quidem quos repudiandae dolorem voluptatibus fuga officia odio nemo recusandae voluptas.
+This page is intentionally simple so I can move quickly.
 
-[Get this theme on GitHub](https://github.com/markteekman/accessible-astro-starter)
+[View the blog](/blog)

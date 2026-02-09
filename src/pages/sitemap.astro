@@ -12,64 +12,63 @@ const staticPages = [
   {
     title: 'Home',
     url: '/',
-    description: 'Welcome to our accessible website featuring modern web development and inclusive design principles.',
+    description: 'Landing page with the latest projects and writing.',
   },
   {
-    title: 'Accessible components',
+    title: 'Toolkit',
     url: '/accessible-components',
-    description: 'A comprehensive showcase of accessible UI components and design patterns for modern web development.',
+    description: 'A compact set of UI patterns and component experiments.',
   },
   {
     title: 'Portfolio',
     url: '/portfolio',
-    description: 'A collection of projects demonstrating accessible design and development practices.',
+    description: 'Selected work and project write-ups.',
   },
   {
     title: 'Blog',
     url: '/blog',
-    description: 'Articles and insights about web accessibility, development best practices, and inclusive design.',
+    description: 'Notes on tooling, deployment, and things worth remembering.',
   },
   {
     title: 'Contact',
     url: '/contact',
-    description:
-      'Get in touch with us for accessibility consulting, development services, or collaboration opportunities.',
+    description: 'Ways to reach me for collaboration or questions.',
   },
   {
-    title: 'Color contrast checker',
+    title: 'Colour Lab',
     url: '/color-contrast-checker',
-    description: 'An interactive tool to check color contrast ratios and ensure WCAG compliance for your designs.',
+    description: 'A contrast playground for palette checks.',
   },
   {
-    title: 'Accessibility statement',
-    url: '/accessibility-statement',
-    description: 'Our commitment to accessibility and information about the accessibility features of this website.',
-  },
-  {
-    title: 'Markdown page example',
+    title: 'Notes',
     url: '/markdown-page',
-    description: 'A demonstration of Markdown content rendering with accessible formatting and typography.',
+    description: 'Quick markdown space for rough ideas and links.',
   },
   {
-    title: 'MDX page example',
+    title: 'Experiments',
     url: '/mdx-page',
-    description: 'An example of MDX content combining Markdown with interactive React components.',
+    description: 'MDX sandbox for layout and component testing.',
+  },
+  {
+    title: 'Launcher',
+    url: '/accessible-launcher',
+    description: 'Details on the command palette shortcut.',
   },
   {
     title: 'Thank you',
     url: '/thank-you',
-    description: 'Confirmation page for successful form submissions and user interactions.',
+    description: 'Confirmation page for contact submissions.',
   },
 ]
 ---
 
 <DefaultLayout
-  title="Sitemap"
-  description="Complete site map showing all pages, portfolio projects, and sections available on our accessible website."
+  title="Index"
+  description="A quick index of pages, projects, and blog posts on this site."
 >
   <PageHeader
-    title="Sitemap"
-    subtitle="A comprehensive overview of all pages and content available on our website, organized for easy navigation."
+    title="Index"
+    subtitle="Everything in one place, sorted for quick navigation."
     bgType="gradient"
   />
 
@@ -102,8 +101,7 @@ const staticPages = [
       <div>
         <Heading level="h2">Portfolio projects</Heading>
         <p class="mb-6">
-          Explore our collection of {projects.length} accessibility-focused projects showcasing inclusive design and development
-          practices.
+          Explore {projects.length} projects with short summaries and links to the full write-ups.
         </p>
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {
@@ -138,21 +136,18 @@ const staticPages = [
             <a href="/blog"> Blog posts </a>
           </Heading>
           <p>
-            Discover articles about web accessibility, development best practices, and inclusive design. Our blog
-            features dynamic content with pagination for easy browsing.
+            Notes on shipping, tooling, and the bits worth documenting while building.
           </p>
           <div class="text-xs">
-            <p>Features: Dynamic content from JSONPlaceholder API</p>
-            <p>
-              Base URL: <code
-                class="rounded bg-neutral-100 px-1 py-0.5 text-xs text-neutral-500 dark:bg-neutral-800 dark:text-neutral-500"
-                >/blog</code
-              >
+            <p>Base URL: <code
+              class="rounded bg-neutral-100 px-1 py-0.5 text-xs text-neutral-500 dark:bg-neutral-800 dark:text-neutral-500"
+              >/blog</code
+            >
             </p>
             <p>
               Individual posts: <code
                 class="rounded bg-neutral-100 px-1 py-0.5 text-xs text-neutral-500 dark:bg-neutral-800 dark:text-neutral-500"
-                >/blog/[post-title]</code
+                >/blog/[post]</code
               >
             </p>
           </div>

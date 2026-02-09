@@ -6,7 +6,7 @@ import { Icon } from 'astro-icon/components'
 ---
 
 <DefaultLayout title="Contact">
-  <PageHeader title="Contact" subtitle="Have a question? Get in touch with us!" bgType="gradient" />
+  <PageHeader title="Contact" subtitle="Got an idea or a project in mind? Let's chat." bgType="gradient" />
   <section class="my-16">
     <div class="container">
       <Heading level="h2">Let's talk</Heading>
@@ -39,47 +39,36 @@ import { Icon } from 'astro-icon/components'
             required
             data-validation="Please select at least one area of interest"
           >
-            <Checkbox name="accessibility" value="a11y" label="Accessibility and inclusive design" />
-            <Checkbox name="wcag-compliance" value="wcag" label="WCAG compliance and testing" />
-            <Checkbox name="screen-reader" value="sr" label="Screen reader optimization" />
-            <Checkbox name="keyboard-nav" value="keyboard" label="Keyboard navigation" />
+            <Checkbox name="project" value="project" label="Project collaboration" />
+            <Checkbox name="freelance" value="freelance" label="Freelance inquiry" />
+            <Checkbox name="questions" value="questions" label="Questions or feedback" />
+            <Checkbox name="other" value="other" label="Other" />
           </Fieldset>
 
           <!-- Radio group (shared names) -->
-          <Fieldset name="experience" legend="Your experience level" required>
-            <Radio name="experience" value="beginner" label="Beginner" />
-            <Radio name="experience" value="intermediate" label="Intermediate" />
-            <Radio name="experience" value="advanced" label="Advanced" />
+          <Fieldset name="timeline" legend="Timeline" required>
+            <Radio name="timeline" value="soon" label="ASAP" />
+            <Radio name="timeline" value="next-month" label="Next month" />
+            <Radio name="timeline" value="future" label="Just exploring" />
           </Fieldset>
 
           <Button htmlType="submit" type="primary">Send Message</Button>
         </Form>
       </div>
       <div class="space-content">
-        <Heading level="h3">Contact us</Heading>
+        <Heading level="h3">Contact info</Heading>
         <p class="text-lg">
-          Experience the power of Accessible Astro Starter's Form components! This contact form showcases our
-          comprehensive form validation system with built-in accessibility features and WCAG 2.2 compliance.
+          The best way to reach me is email. I reply when I'm at my desk, usually within a couple of days.
         </p>
         <p>
-          Our Form component includes automatic validation, proper error handling, semantic HTML structure, and screen
-          reader support. Test out the various input types, validation patterns, and interactive elements to see how
-          accessibility and usability work together seamlessly.
+          If you're sharing project details, include timelines, scope, and any links that help me understand the work.
         </p>
-
-        <div class="gap-2xs flex items-center">
-          <Icon aria-hidden="true" name="lucide:phone" size={20} class="flex-shrink-0" />
-          <p>
-            <span class="font-bold">Phone:</span>
-            <Link href="tel:+12345678900">+1 (234) 567-8900</Link>
-          </p>
-        </div>
 
         <div class="gap-2xs flex items-center">
           <Icon aria-hidden="true" name="lucide:mail" size={20} class="flex-shrink-0" />
           <p>
             <span class="font-bold">Email:</span>
-            <Link href="mailto:hello@accessibleastro.dev">hello@accessibleastro.dev</Link>
+            <Link href="mailto:josh_dev21@protonmail.com">josh_dev21@protonmail.com</Link>
           </p>
         </div>
 
@@ -87,35 +76,15 @@ import { Icon } from 'astro-icon/components'
           <Icon aria-hidden="true" name="lucide:map-pin" size={20} class="flex-shrink-0" />
           <p>
             <span class="font-bold">Address:</span>
-            123 Accessibility Lane, Web Standards City
-          </p>
-        </div>
-
-        <div class="gap-2xs flex items-center">
-          <Icon aria-hidden="true" name="lucide:clock" size={20} class="flex-shrink-0" />
-          <p>
-            <span class="font-bold">Business Hours:</span>
-            Monday - Friday, 9:00 AM - 5:00 PM EST
+            Yorkshire, UK
           </p>
         </div>
 
         <ul class="flex flex-wrap gap-2">
           <li>
-            <Link href="/" isButton isExternal hideIcon animateOnHover animationType="boop">
-              <Icon aria-hidden="true" name="lucide:facebook" size={32} />
-              <span class="sr-only">Go to our Facebook page, opens in a new tab</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/" isButton isExternal hideIcon animateOnHover animationType="boop">
-              <Icon aria-hidden="true" name="lucide:twitter" size={32} />
-              <span class="sr-only">Go to our Twitter page, opens in a new tab</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/" isButton isExternal hideIcon animateOnHover animationType="boop">
-              <Icon aria-hidden="true" name="lucide:linkedin" size={32} />
-              <span class="sr-only">Go to our LinkedIn page, opens in a new tab</span>
+            <Link href="https://github.com/shwaaa21" isButton isExternal hideIcon animateOnHover animationType="boop">
+              <Icon aria-hidden="true" name="lucide:github" size={32} />
+              <span class="sr-only">Go to my GitHub page, opens in a new tab</span>
             </Link>
           </li>
         </ul>

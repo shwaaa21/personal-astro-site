@@ -57,11 +57,11 @@ const components = [
 ]
 ---
 
-<DefaultLayout title="Accessible components">
+<DefaultLayout title="Toolkit">
   <section class="my-12">
     <PageHeader
-      title="Accessible components"
-      subtitle="This theme includes comprehensive accessibility components from the <a href='https://github.com/incluud/accessible-astro-components'>Accessible Astro Components</a> NPM package to accelerate accessible development. For detailed documentation and usage examples, visit our <a href='https://accessible-astro.incluud.dev/'>documentation website</a>. Additional components are available in the theme's components directory. Note: accessibility tools like aXe may report issues due to the static demonstration of the components on this page."
+      title="Toolkit"
+      subtitle="A grab bag of UI patterns and component experiments I keep around for quick testing. This page is intentionally dense so I can scan interactions in one place."
       bgType="bordered"
     />
   </section>
@@ -71,7 +71,7 @@ const components = [
         <Heading level="h2" id="accordion">Accordion</Heading>
         <p>
           The Accordion component is used to show and hide content. It's a great way to keep your page clean and
-          accessible.
+          scannable.
         </p>
         <Heading level="h3">Default</Heading>
         <Accordion>
@@ -168,7 +168,7 @@ const components = [
           />
         </div>
         <Heading level="h3">With title and subtitle</Heading>
-        <Avatar title="Mark Teekman" subtitle="Developer & A11Y Expert" />
+        <Avatar title="Mark Teekman" subtitle="Developer & UI Engineer" />
         <Heading level="h3">Avatar group</Heading>
         <AvatarGroup>
           <Avatar size="sm" label="Developer" initials="DV" />
@@ -344,8 +344,8 @@ const components = [
 
         <Heading level="h2" id="form">Form</Heading>
         <p>
-          The Form component is used to display a form with a name, email, message, and a submit button. It has WCAG 2.2
-          AA compliant validation by default.
+          The Form component is used to display a form with a name, email, message, and a submit button. It ships with
+          sensible validation by default.
         </p>
         <Form>
           <Input label="Name" required />
@@ -357,10 +357,10 @@ const components = [
             required
             data-validation="Please select at least one area of interest"
           >
-            <Checkbox name="accessibility" value="a11y" label="Accessibility and inclusive design" />
-            <Checkbox name="wcag-compliance" value="wcag" label="WCAG compliance and testing" />
-            <Checkbox name="screen-reader" value="sr" label="Screen reader optimization" />
-            <Checkbox name="keyboard-nav" value="keyboard" label="Keyboard navigation" />
+            <Checkbox name="ui" value="ui" label="UI patterns and layout" />
+            <Checkbox name="testing" value="testing" label="Testing and QA" />
+            <Checkbox name="content" value="content" label="Content systems" />
+            <Checkbox name="interaction" value="interaction" label="Interaction design" />
           </Fieldset>
 
           <!-- Radio group (shared names) -->

@@ -57,7 +57,7 @@ const defaultConfig: Omit<ThemeConfig, 'name' | 'id'> = {
   seo: {
     title: 'My Astro Site',
     subtitle: '',
-    description: 'A website built with Accessible Astro Starter',
+    description: 'A personal website built with Astro',
     author: '',
     image: null,
   },

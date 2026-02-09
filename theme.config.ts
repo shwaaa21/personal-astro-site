@@ -38,39 +38,31 @@ export default defineThemeConfig({
         href: '/portfolio',
       },
       {
-        label: 'Features',
+        label: 'Explore',
         type: 'dropdown',
         items: [
           {
-            label: 'Accessibility statement',
-            href: '/accessibility-statement',
-          },
-          {
-            label: 'Accessible components',
+            label: 'Toolkit',
             href: '/accessible-components',
           },
           {
-            label: 'Accessible launcher',
+            label: 'Launcher',
             href: '/accessible-launcher',
           },
           {
-            label: 'Color contrast checker',
+            label: 'Colour Lab',
             href: '/color-contrast-checker',
           },
           {
-            label: 'Markdown page',
+            label: 'Notes',
             href: '/markdown-page',
           },
           {
-            label: 'MDX page',
+            label: 'Experiments',
             href: '/mdx-page',
           },
           {
-            label: '404 page',
-            href: '/404',
-          },
-          {
-            label: 'Sitemap',
+            label: 'Index',
             href: '/sitemap',
           },
         ],
@@ -82,7 +74,7 @@ export default defineThemeConfig({
       },
       {
         type: 'link',
-        label: 'Go to my GitHub page, opens in new tab',
+        label: 'GitHub',
         href: 'https://github.com/shwaaa21',
         icon: 'lucide:github',
         external: true,
