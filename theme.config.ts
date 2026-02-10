@@ -38,36 +38,6 @@ export default defineThemeConfig({
         href: '/portfolio',
       },
       {
-        label: 'Explore',
-        type: 'dropdown',
-        items: [
-          {
-            label: 'Toolkit',
-            href: '/accessible-components',
-          },
-          {
-            label: 'Launcher',
-            href: '/accessible-launcher',
-          },
-          {
-            label: 'Colour Lab',
-            href: '/color-contrast-checker',
-          },
-          {
-            label: 'Notes',
-            href: '/markdown-page',
-          },
-          {
-            label: 'Experiments',
-            href: '/mdx-page',
-          },
-          {
-            label: 'Index',
-            href: '/sitemap',
-          },
-        ],
-      },
-      {
         type: 'link',
         label: 'Contact',
         href: '/contact',
