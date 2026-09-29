@@ -1,11 +1,10 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro'
 import PageHeader from '@components/PageHeader.astro'
-import { Badge, Card, Heading, Link, Pagination } from 'accessible-astro-components'
+import { Badge, Card, Heading, Pagination } from 'accessible-astro-components'
 import { getCollection } from 'astro:content'
 import type { GetStaticPaths, Page } from 'astro'
 import type { CollectionEntry } from 'astro:content'
-import { slugify } from '@utils/slugify'
 
 // Import images directly for optimization
 import projectImage1 from '@assets/images/projects/project-image-1.png'
@@ -17,12 +16,6 @@ import projectImage6 from '@assets/images/projects/project-image-6.png'
 
 export const getStaticPaths = (async ({ paginate }) => {
   const projects = await getCollection('projects')
-  const allTags = projects.map((project) => project.data.tags).flat()
-  const uniqueTagLabels = [...new Set(allTags)].sort((a, b) => a.localeCompare(b))
-  const uniqueTags = uniqueTagLabels.map((label) => ({
-    label,
-    slug: slugify(label),
-  }))
 
   const projectImages = [projectImage1, projectImage2, projectImage3, projectImage4, projectImage5, projectImage6]
 
@@ -35,47 +28,36 @@ export const getStaticPaths = (async ({ paginate }) => {
 
   return paginate(projectsWithImages, {
     pageSize: 6,
-    props: { uniqueTags },
   })
 }) satisfies GetStaticPaths
 
 interface Props {
   page: Page<CollectionEntry<'projects'> & { featuredImage: any }>
-  uniqueTags: { label: string; slug: string }[]
 }
 
-const { page, uniqueTags } = Astro.props
+const { page } = Astro.props
 ---
 
 <DefaultLayout
-  title="Portfolio"
-  description="A selection of projects with short write-ups and links to the work."
+  title="Vault"
+  description="Archived projects and experiments, with the notes that came out of them."
 >
   <PageHeader
-    title="Portfolio"
-    subtitle="A focused list of projects with context, links, and notes on the build."
+    title="Vault"
+    subtitle="Past projects and tutorial hell. Before AI just did it for us."
     bgType="bordered"
   />
   <section class="my-12">
     <div class="container">
-      <Heading level="h2" size="h5" class="mb-2">Tags</Heading>
-      <div class="flex flex-wrap gap-4">
-        {
-          uniqueTags.map((tag: { label: string; slug: string }) => (
-            <Link href={'/portfolio/tag/' + tag.slug}>{tag.label}</Link>
-          ))
-        }
-      </div>
-      <p class="mt-8 text-sm">
-        <em>Project {page.start + 1} through {page.end + 1} of {page.total} total projects</em>
-      </p>
+      <Heading level="h2" size="h5" class="mb-2">Project archive</Heading>
+      <p class="mt-4 text-sm"><em>{page.total} entries available</em></p>
       <ul class="mt-3 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {
           page.data.map((project) => (
             <li>
               <Card
                 imageComponent={project.featuredImage}
-                url={'/portfolio/' + project.id}
+                url={'/vault/' + project.id}
                 title={project.data.title}
                 headingLevel="h2"
                 footer={'Author: ' + project.data.author}
@@ -96,13 +78,13 @@ const { page, uniqueTags } = Astro.props
         page && page.lastPage > 1 && (
           <div class="mt-12 grid place-content-center">
             <Pagination
-              firstPage={page.url.prev ? '/portfolio' : null}
+              firstPage={page.url.prev ? '/vault' : null}
               previousPage={page.url.prev ? page.url.prev : null}
               nextPage={page.url.next ? page.url.next : null}
-              lastPage={page.url.next ? `/portfolio/${page.lastPage}` : null}
+              lastPage={page.url.next ? `/vault/${page.lastPage}` : null}
               currentPage={`${page.currentPage}`}
               totalPages={`${page.lastPage}`}
-              ariaLabel="Portfolio pagination"
+              ariaLabel="Vault pagination"
             />
           </div>
         )

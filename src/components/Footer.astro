@@ -1,5 +1,7 @@
 ---
+import themeConfig from '@theme-config'
 import { Heading, Link } from 'accessible-astro-components'
+import { Icon } from 'astro-icon/components'
 
 /**
  * Footer Component
@@ -16,16 +18,25 @@ const currentYear = new Date().getFullYear()
       <div class="flex flex-col gap-4">
         <Heading level="h3" size="h6">Explore</Heading>
         <ul class="flex flex-col gap-2">
-          <li><Link href="/blog">Blog</Link></li>
-          <li><Link href="/portfolio">Portfolio</Link></li>
+          <li><Link href="/blog">Notes</Link></li>
+          <li><Link href="/vault">Vault</Link></li>
+          <li><Link href="/rss.xml">RSS feed</Link></li>
         </ul>
       </div>
       <div class="flex flex-col gap-4">
-        <Heading level="h3" size="h6">Contact</Heading>
+        <Heading level="h3" size="h6">Give me a follow</Heading>
         <ul class="flex flex-col gap-2">
-          <li><Link href="/contact">Say hello</Link></li>
+          {
+            (themeConfig.socials ?? []).map((social) => (
+              <li>
+                <Link href={social.href} isExternal>
+                  <Icon aria-hidden="true" name={social.icon} size={18} />
+                  {social.label}
+                </Link>
+              </li>
+            ))
+          }
           <li><Link href="mailto:josh_dev21@protonmail.com">josh_dev21@protonmail.com</Link></li>
-          <li><Link isExternal href="https://github.com/shwaaa21">GitHub</Link></li>
         </ul>
       </div>
     </div>

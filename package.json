@@ -67,6 +67,7 @@
     "tailwindcss": "^4.2.4"
   },
   "dependencies": {
+    "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
     "@tailwindcss/vite": "^4.2.4",
     "accessible-astro-components": "^5.8.0",

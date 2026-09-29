@@ -1,7 +1,7 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro'
 import PageHeader from '@components/PageHeader.astro'
-import { Card, Pagination } from 'accessible-astro-components'
+import { Card, Pagination, Link } from 'accessible-astro-components'
 import type { PaginateFunction, Page, ImageMetadata } from 'astro'
 import { getCollection } from 'astro:content'
 import type { CollectionEntry } from 'astro:content'
@@ -36,18 +36,22 @@ const { page } = Astro.props as Props
 ---
 
 <DefaultLayout
-  title="Blog"
-  description="Notes, write-ups, and deployment learnings from recent work."
+  title="Notes"
+  description="My notes."
 >
   <PageHeader
-    title="Blog"
-    subtitle="Build notes, experiments, and things I want to remember later."
+    title="Notes"
+    subtitle="Notes and blobs of stuff."
     bgType="bordered"
   />
 
   <section class="my-12">
     <div class="container">
-      <p class="text-sm"><em>Post {page.start + 1} through {page.end + 1} of {page.total} total posts</em></p>
+      <p class="mb-4 text-sm">
+        Prefer a feed reader?
+        <Link href="/rss.xml">Subscribe via RSS</Link>
+      </p>
+      <p class="text-sm"><em>Note {page.start + 1} through {page.end + 1} of {page.total} total notes</em></p>
       <ul class="my-3 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {
           page.data.map((post) => (
@@ -80,7 +84,7 @@ const { page } = Astro.props as Props
               lastPage={page.url.next ? `/blog/${page.lastPage}` : null}
               currentPage={`${page.currentPage}`}
               totalPages={`${page.lastPage}`}
-              ariaLabel="Blog pagination"
+              ariaLabel="Notes pagination"
             />
           </div>
         )

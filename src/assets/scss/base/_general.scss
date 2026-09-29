@@ -5,6 +5,7 @@
 }
 
 body {
+  position: relative;
   font-weight: 400;
   font-size: 1.15rem;
   line-height: 1.5;
@@ -16,7 +17,41 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   background-color: var(--background-color);
+  background-image:
+    radial-gradient(circle at 10% -10%, color-mix(in oklab, var(--color-primary-200), transparent 80%) 0%, transparent 40%),
+    radial-gradient(circle at 95% 0%, color-mix(in oklab, var(--color-secondary-200), transparent 84%) 0%, transparent 36%),
+    linear-gradient(to right, color-mix(in oklab, var(--border-color-subtle), transparent 55%) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--border-color-subtle), transparent 65%) 1px, transparent 1px);
+  background-size:
+    auto,
+    auto,
+    42px 42px,
+    42px 42px;
+  background-attachment: fixed;
   color: var(--foreground-color);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body {
+    animation: ambient-shift 26s linear infinite alternate;
+  }
+}
+
+@keyframes ambient-shift {
+  from {
+    background-position:
+      0 0,
+      0 0,
+      0 0,
+      0 0;
+  }
+  to {
+    background-position:
+      -20px -12px,
+      24px 8px,
+      0 0,
+      0 0;
+  }
 }
 
 a {

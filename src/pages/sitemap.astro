@@ -4,7 +4,7 @@ import PageHeader from '@components/PageHeader.astro'
 import { Heading, Notification } from 'accessible-astro-components'
 import { getCollection } from 'astro:content'
 
-// Get all portfolio projects
+// Get all vault entries
 const projects = await getCollection('projects')
 
 // Define static pages with their descriptions
@@ -15,49 +15,24 @@ const staticPages = [
     description: 'Landing page with the latest projects and writing.',
   },
   {
-    title: 'Toolkit',
-    url: '/accessible-components',
-    description: 'A compact set of UI patterns and component experiments.',
-  },
-  {
-    title: 'Portfolio',
-    url: '/portfolio',
-    description: 'Selected work and project write-ups.',
-  },
-  {
-    title: 'Blog',
-    url: '/blog',
-    description: 'Notes on tooling, deployment, and things worth remembering.',
-  },
-  {
-    title: 'Contact',
-    url: '/contact',
-    description: 'Ways to reach me for collaboration or questions.',
-  },
-  {
-    title: 'Colour Lab',
-    url: '/color-contrast-checker',
-    description: 'A contrast playground for palette checks.',
-  },
-  {
     title: 'Notes',
-    url: '/markdown-page',
-    description: 'Quick markdown space for rough ideas and links.',
+    url: '/blog',
+    description: 'Notes and blobs of stuff.',
   },
   {
-    title: 'Experiments',
-    url: '/mdx-page',
-    description: 'MDX sandbox for layout and component testing.',
+    title: 'Vault',
+    url: '/vault',
+    description: 'Archived projects and experiments with full write-ups.',
   },
   {
-    title: 'Launcher',
-    url: '/accessible-launcher',
-    description: 'Details on the command palette shortcut.',
+    title: 'RSS feed',
+    url: '/rss.xml',
+    description: 'Subscribe to new notes with any feed reader.',
   },
   {
-    title: 'Thank you',
-    url: '/thank-you',
-    description: 'Confirmation page for contact submissions.',
+    title: 'Index',
+    url: '/sitemap',
+    description: 'A quick index of every page, vault entry, and note on this site.',
   },
 ]
 ---
@@ -97,18 +72,18 @@ const staticPages = [
         </div>
       </div>
 
-      <!-- Portfolio Projects Section -->
+      <!-- Vault Section -->
       <div>
-        <Heading level="h2">Portfolio projects</Heading>
+        <Heading level="h2">Vault entries</Heading>
         <p class="mb-6">
-          Explore {projects.length} projects with short summaries and links to the full write-ups.
+          Explore {projects.length} archived projects with short summaries and links to the full write-ups.
         </p>
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {
             projects.map((project) => (
               <article>
                 <Heading level="h3" size="h6" class="mb-3">
-                  <a href={`/portfolio/${project.id}`}>{project.data.title}</a>
+                  <a href={`/vault/${project.id}`}>{project.data.title}</a>
                 </Heading>
                 <p class="mb-3">{project.data.description}</p>
                 <div class="text-xs">
@@ -118,7 +93,7 @@ const staticPages = [
                   <p>
                     URL:{' '}
                     <code class="rounded bg-neutral-100 px-1 py-0.5 text-xs text-neutral-500 dark:bg-neutral-800 dark:text-neutral-500">
-                      /portfolio/{project.id}
+                      /vault/{project.id}
                     </code>
                   </p>
                 </div>

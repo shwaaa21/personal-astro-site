@@ -1,35 +1,60 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro'
 import Hero from '@components/Hero.astro'
-import FeaturedProjects from '@components/FeaturedProjects.astro'
 import FeaturedPosts from '@components/FeaturedPosts.astro'
 import { Heading, Link } from 'accessible-astro-components'
 ---
 
-<DefaultLayout title="jquest.dev - Notes, projects, and experiments" useTitleTemplate={false}>
+<DefaultLayout title="jquest.dev - Notes" useTitleTemplate={false}>
   <Hero />
 
-  <section class="my-24">
-    <div class="container space-content max-w-3xl">
+  <section class="my-64">
+    <div class="container space-content max-w-4xl">
       <Heading level="h2">Hi, I'm Josh</Heading>
-      <p class="text-2xl">
-        I'm a developer based in Yorkshire, UK. This is my corner of the web for projects and writing.
-      </p>
-      <p>
-        Browse the portfolio for build notes and case studies, or dip into the blog for the latest updates.
-      </p>
-      <div class="flex flex-wrap gap-4">
-        <Link href="/portfolio" isButton type="primary" animateOnHover animationType="boop">
-          View projects
-        </Link>
-        <Link href="/blog" isButton type="secondary" animateOnHover animationType="boop">
-          Read the blog
-        </Link>
+      <p class="text-2xl">Forcing myself to build in public.</p>
+      <p>Making mistakes, remembering the lessons.</p>
+      <div class="grid gap-8 md:grid-cols-3">
+        <article class="panel">
+          <Heading level="h3" size="h5">Learning</Heading>
+          <p>Digesting the fundamentals.</p>
+        </article>
+        <article class="panel">
+          <Heading level="h3" size="h5">Coding</Heading>
+          <p>Fudging stuff together until it just works.</p>
+        </article>
+        <article class="panel">
+          <Heading level="h3" size="h5">Deep Diving</Heading>
+          <p>General tech things I am interested in and exploring.</p>
+        </article>
       </div>
     </div>
   </section>
 
-  <FeaturedProjects />
   <FeaturedPosts />
 
+  <section class="my-24">
+    <div class="container space-content max-w-3xl">
+      <Heading level="h2">Find me elsewhere</Heading>
+      <p>Say hi.</p>
+      <Link
+        href="https://github.com/shwaaa21"
+        isButton
+        isExternal
+        type="secondary"
+        animateOnHover
+        animationType="nudge"
+      >
+        GitHub
+      </Link>
+    </div>
+  </section>
 </DefaultLayout>
+
+<style>
+  .panel {
+    border: 1px solid var(--border-color-subtle);
+    border-radius: var(--radius-l);
+    background: color-mix(in oklab, var(--background-color) 90%, var(--color-primary-100));
+    padding: var(--space-m);
+  }
+</style>

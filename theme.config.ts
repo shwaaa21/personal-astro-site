@@ -8,8 +8,7 @@ export default defineThemeConfig({
   logo: logoImage,
   seo: {
     title: 'jquest.dev',
-    description:
-      'The personal site of Josh G. featuring projects, writing, and developer notes.',
+    description: 'Notes by Josh G. with musings and projects.',
     author: 'Josh G.',
     image: previewImage, // Can also be a string e.g. '/social-preview-image.png',
   },
@@ -29,18 +28,13 @@ export default defineThemeConfig({
       },
       {
         type: 'link',
-        label: 'Blog',
+        label: 'Notes',
         href: '/blog',
       },
       {
         type: 'link',
-        label: 'Portfolio',
-        href: '/portfolio',
-      },
-      {
-        type: 'link',
-        label: 'Contact',
-        href: '/contact',
+        label: 'Vault',
+        href: '/vault',
       },
       {
         type: 'link',
@@ -48,6 +42,13 @@ export default defineThemeConfig({
         href: 'https://github.com/shwaaa21',
         icon: 'lucide:github',
         external: true,
+        excludeFromLauncher: true,
+      },
+      {
+        type: 'link',
+        label: 'RSS',
+        href: '/rss.xml',
+        icon: 'lucide:rss',
         excludeFromLauncher: true,
       },
     ],

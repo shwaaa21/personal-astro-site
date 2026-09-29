@@ -62,13 +62,13 @@ const launcherBlogItems = (await getCollection('blog'))
   }))
 
 /**
- * Project items for the launcher, sourced from the 'projects' collection.
+ * Vault items for the launcher, sourced from the 'projects' collection.
  *
  * @type {Array<{ label: string, href: string, keywords: Array<string> }>}
  */
-const launcherProjectItems = (await getCollection('projects')).map((project) => ({
+const launcherVaultItems = (await getCollection('projects')).map((project) => ({
   label: project.data.title,
-  href: `/portfolio/${project.id}`,
+  href: `/vault/${project.id}`,
   keywords: [project.data.author, ...project.data.tags],
 }))
 
@@ -139,7 +139,7 @@ const launcherSocialItems = (themeConfig.socials ?? []).map((item) => ({
   </LauncherNav>
   {
     launcherBlogItems.length > 0 && (
-      <LauncherNav label="Writing">
+      <LauncherNav label="Notes">
         {launcherBlogItems.map((item) => (
           <LauncherLink label={item.label} href={item.href}>
             <Icon slot="icon" aria-hidden="true" name="lucide:scroll-text" size="16" />
@@ -149,9 +149,9 @@ const launcherSocialItems = (themeConfig.socials ?? []).map((item) => ({
     )
   }
   {
-    launcherProjectItems.length > 0 && (
-      <LauncherNav label="Projects">
-        {launcherProjectItems.map((item) => (
+    launcherVaultItems.length > 0 && (
+      <LauncherNav label="Vault">
+        {launcherVaultItems.map((item) => (
           <LauncherLink label={item.label} href={item.href} keywords={item.keywords}>
             <Icon slot="icon" aria-hidden="true" name="lucide:bookmark" size="16" />
           </LauncherLink>

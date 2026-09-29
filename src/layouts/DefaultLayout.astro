@@ -64,6 +64,7 @@ const imageUrl = new URL(imagePath, Astro.site).href
 
     <!-- favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title={`${themeConfig.seo.title} RSS`} href="/rss.xml" />
 
     <!-- theme colors from config -->
     <style

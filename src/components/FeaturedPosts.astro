@@ -25,12 +25,12 @@ interface Props {
   limit?: number
   /**
    * The title for the section
-   * @default "Latest posts"
+   * @default "Latest notes"
    */
   title?: string
 }
 
-const { class: className, limit = 3, title = 'Latest posts' } = Astro.props
+const { class: className, limit = 3, title = 'Latest notes' } = Astro.props
 
 const postImages = [postImage1, postImage2, postImage3]
 const posts = (await getCollection('blog'))
@@ -68,7 +68,7 @@ const featuredPosts = posts.slice(0, limit).map((post, index) => ({
     </div>
     <div class="mt-12">
       <Link href="/blog/" isButton animateOnHover animationType="nudge">
-        Read all posts
+        See all notes
         <Icon aria-hidden="true" name="lucide:arrow-right" size="1.5rem" />
       </Link>
     </div>

@@ -35,7 +35,7 @@ const { src = '/astronaut-hero-img.webp' }: Props = Astro.props
             animationType="boop"
           >
             <Icon aria-hidden="true" name="lucide:github" size="1.5rem" />
-            Check out GitHub
+            Explore GitHub
           </Link>
           <Link
             href="/blog"
@@ -45,7 +45,7 @@ const { src = '/astronaut-hero-img.webp' }: Props = Astro.props
             animationType="boop"
           >
             <Icon aria-hidden="true" name="lucide:book-open" size="1.5rem" />
-            Read some stuff
+            Read notes
           </Link>
         </div>
       </div>
@@ -68,5 +68,31 @@ const { src = '/astronaut-hero-img.webp' }: Props = Astro.props
     background-clip: border-box;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 24px color-mix(in oklab, var(--color-secondary-200), transparent 70%);
+  }
+
+  .hero {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: -2rem 0 auto;
+    z-index: -1;
+    block-size: min(40vw, 18rem);
+    background:
+      radial-gradient(
+        circle at 15% 30%,
+        color-mix(in oklab, var(--color-primary-200), transparent 68%),
+        transparent 65%
+      ),
+      radial-gradient(
+        circle at 70% 10%,
+        color-mix(in oklab, var(--color-secondary-200), transparent 72%),
+        transparent 62%
+      );
+    pointer-events: none;
   }
 </style>
