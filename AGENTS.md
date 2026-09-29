@@ -1,13 +1,16 @@
-# Accessible Astro Starter
+# jquest.dev
 
-A ready-to-use, SEO and accessibility-focused Astro starter template with blog and portfolio functionality.
+A personal site built on the SEO- and accessibility-focused
+[Accessible Astro Starter](https://github.com/incluud/accessible-astro-starter), stripped
+down to the pages that are actually published.
 
 ## Project Overview
 
-- **Type**: Starter theme (static site / blog / portfolio)
+- **Type**: Personal site (static site / notes / portfolio)
 - **Output Mode**: Static (SSG)
-- **Homepage**: https://accessible-astro-starter.incluud.dev/
-- **Repository**: https://github.com/incluud/accessible-astro-starter
+- **Homepage**: https://jquest.dev
+- **Repository**: https://github.com/shwaaa21/personal-astro-site
+- **Upstream**: `upstream` remote tracks the starter; `git fetch upstream && git merge upstream/main`
 
 Check `package.json` for current version and all dependencies.
 
@@ -73,12 +76,13 @@ This project can work with locally linked `accessible-astro-components`:
   - Filesystem access to parent directories
   - Symlink preservation in Vite
 
-**To link local components**:
+**To link local components** (only useful when you have a checkout of the components
+library alongside this repo):
 
 ```bash
 cd ../accessible-astro-components
 npm link
-cd ../accessible-astro-starter
+cd <this repo>
 npm link accessible-astro-components
 ```
 
@@ -166,14 +170,15 @@ src/
 │   └── MarkdownLayout.astro   # Layout for MDX content
 ├── pages/               # Route pages (file-based routing)
 │   ├── index.astro      # Homepage
-│   ├── accessible-components.astro  # Component showcase
-│   ├── blog/
+│   ├── blog/            # "Notes" — posts
 │   │   ├── [...page].astro    # Blog pagination (dynamic route)
 │   │   └── [post].astro       # Individual blog posts (dynamic route)
-│   ├── contact.astro    # Contact form with validation
-│   ├── color-contrast.astro   # Interactive contrast checker
-│   ├── 404.astro        # Custom 404 page
-│   └── ... (explore for more pages)
+│   ├── vault/           # "Vault" — archived projects
+│   │   ├── [...page].astro    # Vault listing (paginated)
+│   │   └── [project].astro     # Individual project write-ups
+│   ├── rss.xml.ts       # RSS feed (@astrojs/rss)
+│   ├── sitemap.astro    # Human-readable page index
+│   └── 404.astro        # Custom 404 page
 ├── assets/
 │   ├── images/          # Project images
 │   ├── img/             # SVG assets
@@ -203,7 +208,9 @@ import { Accordion, AccordionItem, Button, Card, DarkMode, Modal } from 'accessi
 ---
 ```
 
-Many files throughout this project import from `accessible-astro-components`. Check the `/accessible-components` page to see all available components in action.
+Many files throughout this project import from `accessible-astro-components`. There is no
+component showcase page in this stripped-down site, so consult the
+[package docs](https://www.incluud.dev/package/accessible-astro-components) instead.
 
 ### Creating Custom Components
 
@@ -213,15 +220,6 @@ Many files throughout this project import from `accessible-astro-components`. Ch
 - Ensure keyboard accessibility
 - Follow existing patterns in the codebase
 - Import and use components from the package when possible
-
-### Component Showcase Page
-
-The `/accessible-components` page (`src/pages/accessible-components.astro`) demonstrates:
-
-- All available components from the library
-- Usage examples and code snippets
-- Accessibility features of each component
-- Interactive demos
 
 ## Content Collections
 
@@ -256,63 +254,62 @@ Projects are MDX content in `src/content/projects/`:
 ### Homepage (`index.astro`)
 
 - Hero section with CTA
-- Featured posts
-- Featured projects
-- Component showcases
+- Three-panel intro
+- Featured notes
+- Social links
 
-### Blog (`blog/[...page].astro` and `blog/[post].astro`)
+### Notes (`blog/[...page].astro` and `blog/[post].astro`)
 
 - Pagination support
 - Dynamic routes for individual posts
 - Breadcrumbs navigation
 - Social sharing
+- RSS subscribe link
 
-### Contact Page (`contact.astro`)
+### Vault (`vault/[...page].astro` and `vault/[project].astro`)
 
-- Form validation showcase
-- Accessible form components
-- Error handling examples
-- Success page redirect
+- Paginated project archive
+- Dynamic routes for individual project write-ups
+- Social sharing
 
-### Accessible Components (`accessible-components.astro`)
+### RSS feed (`rss.xml.ts`)
 
-- Comprehensive component showcase
-- Live interactive examples
-- Component documentation
-- Accessibility features highlighted
+- Built with `@astrojs/rss`
+- Renders each post's body to HTML via the Astro container API; MDX entries
+  compile to JSX, so the MDX server renderer must be registered on the container
+  or rendering fails with `NoMatchingRenderer`
+- `src/utils/rss.ts` holds that helper
 
-### Color Contrast Checker (`color-contrast.astro`)
+### Page index (`sitemap.astro`)
 
-- Interactive WCAG contrast checker
-- Real-time contrast ratio calculation
-- Pass/fail indicators for AA and AAA levels
+- Human-readable index of every static page, vault entry, and notes route
+- The `staticPages` array at the top is the place to register a new static route
 
 ## Deployment
 
-This is a **static site** (SSG) that can be deployed anywhere:
+This site is **deployed** to https://jquest.dev via GitHub Pages. See the README's
+Deployment section for the full setup. The essentials:
 
-### Popular Options
+- **Trigger:** pushes to `personal-site` (also runnable by hand via `workflow_dispatch`)
+- **Workflow:** `.github/workflows/deploy.yml`, two jobs — `build` then `deploy`
+- **Publish:** `actions/upload-pages-artifact` + `actions/deploy-pages`, so Pages
+  publishes the artifact rather than reading a branch
+- **Auth:** OIDC via `id-token: write`; no secrets, no deploy key
+- **Custom domain:** `public/CNAME` is copied into the build so Pages serves `jquest.dev`
 
-1. **Netlify**: Drop-in deployment
-   - Build command: `npm run build`
-   - Publish directory: `dist`
-
-2. **Vercel**: Zero-config deployment
-   - Auto-detects Astro
-   - Deploys on push
-
-3. **GitHub Pages**: Free hosting
-   - Configure base path in `astro.config.mjs`
-   - Use GitHub Actions for CI/CD
-
-4. **Cloudflare Pages**: Fast global CDN
-   - Build command: `npm run build`
-   - Output directory: `dist`
+Requires Pages **Source** to be set to **GitHub Actions** in `shwaaa21/shwaaa21.github.io`.
+If a deploy ever pushes successfully but the live site doesn't change, check that setting
+first — Pages silently ignores content in the repo when the source is an Actions artifact.
 
 ### Build Configuration
 
-- Site URL configured in `astro.config.mjs`: `site: 'https://accessible-astro-starter.incluud.dev'`
+- Site URL configured in `astro.config.mjs`: `site: 'https://jquest.dev'`
 - Sitemap automatically generated via `@astrojs/sitemap`
+- Node version pinned in `.nvmrc` (v24.19.0); `package.json` `engines` requires
+  npm >= 11.17.0, so regenerate `package-lock.json` with a matching npm or `npm ci`
+  fails in CI with a lockfile-out-of-sync error
+- CI uses `npm ci`, not `npm install`, so `package-lock.json` must stay committed
+  and in sync with `package.json`
 - Compressed HTML output for performance
 
 ## Commit Guidelines

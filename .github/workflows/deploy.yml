@@ -6,9 +6,19 @@ on:
       - personal-site
   workflow_dispatch:
 
-# Allow the workflow to push to the Pages repo and open PRs on it.
+# Pages deploys from the artifact produced below, authenticated by an OIDC token
+# rather than a stored credential. id-token: write is what mints that token;
+# pages: write is what allows publishing it.
 permissions:
   contents: read
+  pages: write
+  id-token: write
+
+# Pages serves one deployment at a time, so a newer push supersedes any run
+# still in flight.
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -30,83 +40,21 @@ jobs:
       - name: Build
         run: npm run build
 
-      # Uploads dist/ as a build artifact so the deploy job can pick it up.
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: dist
-          path: dist/
-          include-hidden-files: true
-          retention-days: 1
+          path: dist
 
   deploy:
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
-    # The Pages repo already exists, so this only pushes a new commit to it.
-    # The deploy key needs write access to that repo.
+    # GitHub reads the URL and name back from the environment so the deploy
+    # shows up on the Pages settings page.
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v5
-        with:
-          name: dist
-          path: dist
-
-      - name: Configure git
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-      # The deploy key comes from the PAGES_DEPLOY_KEY secret, written to a
-      # temporary file that is removed at the end of the job. GIT_SSH_COMMAND
-      # points git at it; without this the push has no key for the Pages repo.
-      - name: Push to Pages repo
-        env:
-          PAGES_REPO: shwaaa21/shwaaa21.github.io
-          PAGES_DEPLOY_KEY: ${{ secrets.PAGES_DEPLOY_KEY }}
-        run: |
-          set -euo pipefail
-
-          keyfile="$RUNNER_TEMP/deploy_key"
-
-          # Test the variable, not the file: printf always emits a trailing
-          # newline, so a blank secret still writes a 1-byte file.
-          if [ -z "${PAGES_DEPLOY_KEY//[[:space:]]/}" ]; then
-            echo "::error::PAGES_DEPLOY_KEY resolved to an empty value"
-            echo "Check it is a repository secret on THIS repo (not the Pages"
-            echo "repo, and not under Environments, which needs a workflow"
-            echo "'environment:' key to be readable)."
-            exit 1
-          fi
-
-          # Written via env so the key never lands in the shell command line.
-          printf '%s\n' "$PAGES_DEPLOY_KEY" > "$keyfile"
-          chmod 600 "$keyfile"
-
-          export GIT_SSH_COMMAND="ssh -i $keyfile -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
-
-          if ! grep -q "BEGIN OPENSSH PRIVATE KEY" "$keyfile"; then
-            echo "::error::PAGES_DEPLOY_KEY does not look like a private key"
-            # Report shape only, never key material, so we can tell a public
-            # key from pasted shell text from literal \n escapes.
-            echo "bytes=$(wc -c < "$keyfile") lines=$(wc -l < "$keyfile")"
-            echo "first_line=$(head -1 "$keyfile" | cut -c1-40)"
-            exit 1
-          fi
-
-          # Confirms the key authenticates before we rely on it. The SSH host is
-          # just github.com; the repo is selected by the key, not the hostname.
-          ssh -T -i "$keyfile" -o IdentitiesOnly=yes git@github.com || true
-
-          # Fresh history each deploy: the Pages repo is a build artifact store,
-          # not a source of truth, so old commits carry no value.
-          cd dist
-          git init -q
-          git checkout -q -b main
-          git add -A
-          git commit -q -m "Deploy ${GITHUB_SHA::8}"
-          git push --force "git@github.com:${PAGES_REPO}.git" main
-
-          rm -f "$keyfile"
-
-          echo "Deployed to ${PAGES_REPO} main"
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

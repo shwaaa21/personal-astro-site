@@ -65,6 +65,50 @@ Clone this repository and run any of the following commands:
 - **Typography:** Atkinson Hyperlegible font for improved readability
 - **Icons:** [Lucide](https://lucide.dev) via astro-icon
 
+## 🚀 Deployment
+
+The site is live at **https://jquest.dev** and deploys automatically from `personal-site`.
+
+### How it works
+
+A push to `personal-site` runs `.github/workflows/deploy.yml`, which has two jobs:
+
+1. **Build** — checks out the repo, installs with `npm ci`, runs `npm run build`, and uploads `dist/` as a Pages artifact.
+2. **Deploy** — publishes that artifact to GitHub Pages via `actions/deploy-pages`.
+
+The jobs are separate so the deploy only runs once the build succeeds. The `deploy` job is
+pinned to the `github-pages` environment, which is where GitHub tracks the live deployment
+URL.
+
+There are **no secrets and no deploy key**. The workflow authenticates with a short-lived
+OIDC token minted for this job (`id-token: write`), so there is no stored credential to
+leak, rotate, or expire.
+
+`public/CNAME` is copied into the build output and tells GitHub Pages which custom domain
+to serve, which is how `jquest.dev` resolves.
+
+### One-time setup
+
+In `shwaaa21/shwaaa21.github.io` → **Settings → Pages**, set **Source** to **GitHub Actions**.
+Nothing else is required — the workflow creates and manages the `github-pages` environment
+on first run.
+
+If `jquest.dev` is already registered, the DNS records are in place. If you ever need to
+re-add the domain, Settings → Pages → Custom domain.
+
+### Running a deploy by hand
+
+Actions → Deploy to GitHub Pages → Run workflow. Useful after a DNS or settings change,
+since neither requires a commit.
+
+### Adding a route
+
+New pages under `src/pages/` are picked up automatically. To add a URL to the built-in index at `/sitemap`, add an entry to the `staticPages` array in `src/pages/sitemap.astro`.
+
+### Adding a route
+
+New pages under `src/pages/` are picked up automatically. To add a URL to the built-in index at `/sitemap`, add an entry to the `staticPages` array in `src/pages/sitemap.astro`.
+
 ## 🙏 Acknowledgments
 
 Huge thanks to:
