@@ -79,8 +79,13 @@ jobs:
             echo "::error::PAGES_DEPLOY_KEY secret is empty"
             exit 1
           fi
+
           if ! grep -q "BEGIN OPENSSH PRIVATE KEY" "$keyfile"; then
             echo "::error::PAGES_DEPLOY_KEY does not look like a private key"
+            # Report shape only, never key material, so we can tell a public
+            # key from pasted shell text from literal \n escapes.
+            echo "bytes=$(wc -c < "$keyfile") lines=$(wc -l < "$keyfile")"
+            echo "first_line=$(head -1 "$keyfile" | cut -c1-40)"
             exit 1
           fi
 
