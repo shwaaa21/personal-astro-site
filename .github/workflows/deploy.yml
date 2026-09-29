@@ -63,9 +63,36 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.PAGES_DISPATCH_TOKEN }}
         run: |
-          set -euo pipefail
+          set -uo pipefail
+
+          # Capture stderr and the status code rather than letting gh exit
+          # silently: a 403 from a mis-scoped token and a 422 from a workflow
+          # file that predates an input both fail this step, and only the
+          # response body says which. The body can contain no secret, only
+          # GitHub's own error text, so it is safe to surface.
+          out="$(mktemp)"
+          status=0
           gh api "repos/shwaaa21/shwaaa21.github.io/actions/workflows/deploy.yml/dispatches" \
             --method POST \
             --field ref=main \
             --field "inputs[ref]=${GITHUB_REF_NAME}" \
-            --field "inputs[sha]=${GITHUB_SHA}"
+            --field "inputs[sha]=${GITHUB_SHA}" >"$out" 2>&1 || status=$?
+
+          {
+            echo "### Trigger result"
+            echo
+            echo "- status: \`$status\`"
+            echo "- endpoint: \`POST /repos/shwaaa21/shwaaa21.github.io/actions/workflows/deploy.yml/dispatches\`"
+            echo "- token: ${#GH_TOKEN} chars, $(case "$GH_TOKEN" in github_pat_*) echo fine-grained ;; ghp_*) echo classic ;; *) echo unrecognised ;; esac)"
+            echo
+            echo '```'
+            cat "$out"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$status" -ne 0 ]; then
+            echo "::error::gh api failed with status $status (see the step summary)"
+            cat "$out" >&2
+          fi
+          rm -f "$out"
+          exit "$status"
