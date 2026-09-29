@@ -68,17 +68,22 @@ jobs:
           set -euo pipefail
 
           keyfile="$RUNNER_TEMP/deploy_key"
+
+          # Test the variable, not the file: printf always emits a trailing
+          # newline, so a blank secret still writes a 1-byte file.
+          if [ -z "${PAGES_DEPLOY_KEY//[[:space:]]/}" ]; then
+            echo "::error::PAGES_DEPLOY_KEY resolved to an empty value"
+            echo "Check it is a repository secret on THIS repo (not the Pages"
+            echo "repo, and not under Environments, which needs a workflow"
+            echo "'environment:' key to be readable)."
+            exit 1
+          fi
+
           # Written via env so the key never lands in the shell command line.
           printf '%s\n' "$PAGES_DEPLOY_KEY" > "$keyfile"
           chmod 600 "$keyfile"
 
           export GIT_SSH_COMMAND="ssh -i $keyfile -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
-
-          # Surface setup problems here rather than as an opaque push failure.
-          if [ ! -s "$keyfile" ]; then
-            echo "::error::PAGES_DEPLOY_KEY secret is empty"
-            exit 1
-          fi
 
           if ! grep -q "BEGIN OPENSSH PRIVATE KEY" "$keyfile"; then
             echo "::error::PAGES_DEPLOY_KEY does not look like a private key"
