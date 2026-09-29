@@ -46,12 +46,12 @@ jobs:
           # Shape only, never any part of the token itself, so a run can
           # distinguish a missing secret from a malformed value. Only the
           # length and the recognised prefix are reported.
-          echo "length=${#token}"
           case "$token" in
-            github_pat_*) echo "prefix=github_pat_ (looks like a fine-grained PAT)" ;;
-            ghp_*)        echo "prefix=ghp_ (looks like a classic PAT)" ;;
-            *)            echo "prefix=unrecognised" ;;
+            github_pat_*) kind="fine-grained PAT" ;;
+            ghp_*)        kind="classic PAT" ;;
+            *)            kind="unrecognised" ;;
           esac
+          echo "PAGES_DISPATCH_TOKEN: length ${#token}, looks like: $kind" >> "$GITHUB_STEP_SUMMARY"
 
       # Contents: write on the target is what this endpoint requires. The
       # target's own workflow gates the actual publish behind the build, so
