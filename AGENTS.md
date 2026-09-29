@@ -288,18 +288,24 @@ Projects are MDX content in `src/content/projects/`:
 ## Deployment
 
 This site is **deployed** to https://jquest.dev via GitHub Pages. See the README's
-Deployment section for the full setup. The essentials:
+Deployment section for full detail. The essentials:
 
-- **Trigger:** pushes to `personal-site` (also runnable by hand via `workflow_dispatch`)
-- **Workflow:** `.github/workflows/deploy.yml`, two jobs — `build` then `deploy`
-- **Publish:** `actions/upload-pages-artifact` + `actions/deploy-pages`, so Pages
-  publishes the artifact rather than reading a branch
-- **Auth:** OIDC via `id-token: write`; no secrets, no deploy key
-- **Custom domain:** `public/CNAME` is copied into the build so Pages serves `jquest.dev`
+- **This repo is source only.** GitHub only accepts Pages deployments from the repo where
+  Pages is enabled, so this repo cannot deploy. `.github/workflows/ci.yml` lints and
+  builds on push and PR, and nothing more.
+- **The deploy workflow lives in `shwaaa21/shwaaa21.github.io`**, at
+  `.github/workflows/deploy.yml`. It checks out this repo, builds it, and publishes the
+  artifact via `upload-pages-artifact` + `deploy-pages`.
+- **Deploys are manual** — Actions → Deploy to GitHub Pages → Run workflow, with a `ref`
+  input (defaults to `personal-site`). Pushing here does not deploy.
+- **Auth:** OIDC via `id-token: write`. No secrets, no deploy key.
+- **Custom domain:** `public/CNAME` is copied into the build so Pages serves `jquest.dev`.
 
-Requires Pages **Source** to be set to **GitHub Actions** in `shwaaa21/shwaaa21.github.io`.
-If a deploy ever pushes successfully but the live site doesn't change, check that setting
-first — Pages silently ignores content in the repo when the source is an Actions artifact.
+When changing deployment config, remember the split: anything that decides *what gets
+published* goes in the Pages repo, anything that decides *what the site is* goes here. A
+workflow left in this repo that calls `deploy-pages` will fail with
+`Failed to create deployment (status: 404)` — that error means the deploy is running in
+the wrong repository, not that Pages is broken.
 
 ### Build Configuration
 

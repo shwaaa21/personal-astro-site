@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - personal-site
+  pull_request:
+  workflow_dispatch:
+
+# This repo holds the site source but is not where Pages is enabled, so it
+# cannot deploy. The Pages API only accepts deployments from the repo hosting
+# the site, which is shwaaa21/shwaaa21.github.io — that repo owns the deploy
+# workflow and checks this repo out to build it. This workflow exists to catch
+# a broken build before it reaches a deploy.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npx eslint .
+
+      - name: Build
+        run: npm run build

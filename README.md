@@ -71,10 +71,18 @@ The site is live at **https://jquest.dev** and deploys automatically from `perso
 
 ### How it works
 
-A push to `personal-site` runs `.github/workflows/deploy.yml`, which has two jobs:
+Deployment is split across two repos, because GitHub only accepts Pages deployments from
+the repo where Pages is enabled:
 
-1. **Build** — checks out the repo, installs with `npm ci`, runs `npm run build`, and uploads `dist/` as a Pages artifact.
-2. **Deploy** — publishes that artifact to GitHub Pages via `actions/deploy-pages`.
+| Repo | Role |
+| --- | --- |
+| `shwaaa21/personal-astro-site` (here) | Site source. Has a CI workflow that lints and builds on every push. |
+| `shwaaa21/shwaaa21.github.io` | Hosts the Pages site. Has the deploy workflow, which checks out this repo and builds it. |
+
+The deploy workflow in `shwaaa21.github.io` runs two jobs:
+
+1. **Build** — checks out `shwaaa21/personal-astro-site`, installs with `npm ci`, runs `npm run build`, and uploads `dist/` as a Pages artifact.
+2. **Deploy** — publishes that artifact via `actions/deploy-pages`.
 
 The jobs are separate so the deploy only runs once the build succeeds. The `deploy` job is
 pinned to the `github-pages` environment, which is where GitHub tracks the live deployment
@@ -87,19 +95,18 @@ leak, rotate, or expire.
 `public/CNAME` is copied into the build output and tells GitHub Pages which custom domain
 to serve, which is how `jquest.dev` resolves.
 
+### Deploying
+
+Pushes to `personal-site` here run CI only — they do **not** deploy. To publish a change,
+open a **Run workflow** on the `Deploy to GitHub Pages` workflow in
+`shwaaa21/shwaaa21.github.io` and set the `ref` input to the branch or SHA you want built.
+It defaults to `personal-site`.
+
 ### One-time setup
 
-In `shwaaa21/shwaaa21.github.io` → **Settings → Pages**, set **Source** to **GitHub Actions**.
-Nothing else is required — the workflow creates and manages the `github-pages` environment
-on first run.
-
-If `jquest.dev` is already registered, the DNS records are in place. If you ever need to
-re-add the domain, Settings → Pages → Custom domain.
-
-### Running a deploy by hand
-
-Actions → Deploy to GitHub Pages → Run workflow. Useful after a DNS or settings change,
-since neither requires a commit.
+In `shwaaa21/shwaaa21.github.io` → **Settings → Pages**, set **Source** to **GitHub Actions**
+and confirm the custom domain is `jquest.dev` with a successful DNS check. The workflow
+manages the `github-pages` environment itself.
 
 ### Adding a route
 
