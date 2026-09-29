@@ -82,15 +82,15 @@ the repo where Pages is enabled:
 On a push to `personal-site`:
 
 1. **`ci.yml`** (here) lints and builds. A failure stops the deploy.
-2. **`deploy.yml`** (here) sends a `repository_dispatch` to the Pages repo.
-3. **`deploy.yml`** (there) receives the dispatch, checks out the exact commit that fired it, builds, and publishes via `actions/upload-pages-artifact` + `actions/deploy-pages`.
+2. **`deploy.yml`** (here) triggers the deploy workflow in the Pages repo, passing the commit SHA to build.
+3. **`deploy.yml`** (there) checks out that exact commit, builds, and publishes via `actions/upload-pages-artifact` + `actions/deploy-pages`.
 
-The dispatch pins the source checkout to a commit SHA rather than a branch name, so two
-rapid pushes can't race — each deploy builds the commit that triggered it.
+The trigger passes the source commit SHA rather than a branch name, so two rapid pushes
+can't race — each deploy builds the commit that triggered it.
 
 Publishing itself is authenticated with a short-lived OIDC token (`id-token: write`), so
 the Pages repo holds no stored credential. The one secret involved is a PAT used solely to
-send the cross-repo notification.
+trigger the cross-repo workflow.
 
 `public/CNAME` is copied into the build output and tells GitHub Pages which custom domain
 to serve, which is how `jquest.dev` resolves.
@@ -102,11 +102,12 @@ to serve, which is how `jquest.dev` resolves.
    - Repository access: **Only select repositories** → `shwaaa21.github.io`
    - Permissions → Repository permissions → **Actions: Read and write**
    - Metadata: Read-only (selected automatically)
-2. Add it as a repository secret named **`PAGES_DISPATCH_TOKEN`** on this repo.
-3. In `shwaaa21/shwaaa21.github.io` → **Settings → Pages**, confirm **Source** is
+2. Add it as a repository secret named **`PAGES_DISPATCH_TOKEN`** on this repo. The name
+   must match exactly; GitHub secret names are case-sensitive.
+3. In `shwaaa21.github.io` → **Settings → Pages**, confirm **Source** is
    **GitHub Actions** and the custom domain `jquest.dev` has a passing DNS check.
 
-Until the secret is set, pushes still pass CI and the deploy step is skipped with a
+Until the secret is set, pushes still pass CI and the trigger step is skipped with a
 notice, so nothing goes red while you're setting it up. Deploys are also available by hand
 from the Pages repo's Actions tab at any time.
 

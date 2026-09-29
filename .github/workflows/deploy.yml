@@ -53,17 +53,19 @@ jobs:
           esac
           echo "PAGES_DISPATCH_TOKEN: length ${#token}, looks like: $kind" >> "$GITHUB_STEP_SUMMARY"
 
-      # Contents: write on the target is what this endpoint requires. The
-      # target's own workflow gates the actual publish behind the build, so
-      # there is no way to deploy a commit that does not compile.
-      - name: Dispatch pages-deploy
+      # Actions: write on the target is what this endpoint requires, which is
+      # why the token needs that permission rather than Contents: write (the
+      # latter is for repository_dispatch, a different endpoint). The target's
+      # own workflow gates the publish behind a build, so there is no way to
+      # deploy a commit that does not compile.
+      - name: Trigger deploy in the Pages repo
         if: steps.pat.outputs.configured == 'true'
         env:
           GH_TOKEN: ${{ secrets.PAGES_DISPATCH_TOKEN }}
         run: |
           set -euo pipefail
-          gh api repos/shwaaa21/shwaaa21.github.io/dispatches \
+          gh api "repos/shwaaa21/shwaaa21.github.io/actions/workflows/deploy.yml/dispatches" \
             --method POST \
-            --field event_type=pages-deploy \
-            --field "client_payload[ref]=${GITHUB_REF_NAME}" \
-            --field "client_payload[sha]=${GITHUB_SHA}"
+            --field ref=main \
+            --field "inputs[ref]=${GITHUB_REF_NAME}" \
+            --field "inputs[sha]=${GITHUB_SHA}"

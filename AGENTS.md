@@ -294,14 +294,15 @@ Deployment section for full detail. The essentials:
   accepts deployments from the repo where Pages is enabled. Its `deploy.yml` checks out
   this repo, builds it, and publishes via `upload-pages-artifact` + `deploy-pages`.
 - **This repo triggers it.** `.github/workflows/ci.yml` lints and builds on push and PR;
-  `.github/workflows/deploy.yml` then sends a `repository_dispatch` to the Pages repo.
+  `.github/workflows/deploy.yml` then triggers the Pages repo's workflow via the
+  workflow-dispatch API, passing the commit SHA to build.
 - **A push to `personal-site` deploys automatically.** No manual step.
 - **Two credentials, neither of them an SSH key:** the Pages repo publishes via an OIDC
   token (`id-token: write`), and the `PAGES_DISPATCH_TOKEN` secret here is a fine-grained
-  PAT with `Actions: Read and write` on the Pages repo, used only to send the dispatch.
+  PAT with `Actions: Read and write` on the Pages repo, used only to trigger that workflow.
 - **Custom domain:** `public/CNAME` is copied into the build so Pages serves `jquest.dev`.
 
-Two traps worth remembering, both hit while setting this up:
+Three traps worth remembering, all hit while setting this up:
 
 - A workflow in *this* repo that calls `deploy-pages` fails with
   `Failed to create deployment (status: 404)`. That means the deploy is running in the
@@ -310,6 +311,10 @@ Two traps worth remembering, both hit while setting this up:
   workflow. Presence checks have to happen in a step's `env:` and publish a step output
   for the gating step to read. `deploy.yml` here uses that pattern so a missing PAT
   skips rather than failing every push.
+- Workflow dispatch and repository dispatch need different scopes on a fine-grained PAT:
+  `Actions: write` and `Contents: write` respectively. The Pages repo is triggered with
+  workflow dispatch, so it needs `Actions: write`. Using the wrong one returns a 403 with
+  no hint about which permission is missing.
 
 ### Build Configuration
 
