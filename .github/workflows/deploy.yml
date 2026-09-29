@@ -1,0 +1,82 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - personal-site
+  workflow_dispatch:
+
+# Allow the workflow to push to the Pages repo and open PRs on it.
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      # Uploads dist/ as a build artifact so the deploy job can pick it up.
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          include-hidden-files: true
+          retention-days: 1
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    # The Pages repo already exists, so this only pushes a new commit to it.
+    # The deploy key needs write access to that repo.
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: dist
+          path: dist
+
+      - name: Configure git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      # Uses a deploy key stored as the PAGES_DEPLOY_KEY secret, written to a
+      # temporary path and removed at the end of the job.
+      - name: Push to Pages repo
+        env:
+          PAGES_REPO: shwaaa21/shwaaa21.github.io
+        run: |
+          keyfile="$RUNNER_TEMP/deploy_key"
+          printf '%s\n' "${{ secrets.PAGES_DEPLOY_KEY }}" > "$keyfile"
+          chmod 600 "$keyfile"
+
+          # Fresh history each deploy: the Pages repo is a build artifact store,
+          # not a source of truth, so old commits carry no value.
+          cd dist
+          git init -q
+          git checkout -q -b main
+          git add -A
+          git commit -q -m "Deploy ${GITHUB_SHA::8}"
+          git push -q --force \
+            "git@github.com:${PAGES_REPO}.git" main
+
+          rm -f "$keyfile"
+
+          echo "Deployed to ${PAGES_REPO} main"
