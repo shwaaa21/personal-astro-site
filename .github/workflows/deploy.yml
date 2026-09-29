@@ -34,7 +34,10 @@ jobs:
           PAGES_DISPATCH_TOKEN: ${{ secrets.PAGES_DISPATCH_TOKEN }}
         run: |
           set -euo pipefail
-          if [ -n "$PAGES_DISPATCH_TOKEN" ]; then
+          # Default rather than bare reference: an Actions env entry is set but
+          # empty when the secret is missing, and -u would abort on that.
+          token="${PAGES_DISPATCH_TOKEN:-}"
+          if [ -n "$token" ]; then
             echo "configured=true" >> "$GITHUB_OUTPUT"
           else
             echo "configured=false" >> "$GITHUB_OUTPUT"
@@ -43,13 +46,12 @@ jobs:
           # Shape only, never any part of the token itself, so a run can
           # distinguish a missing secret from a malformed value. Only the
           # length and the recognised prefix are reported.
-          echo "length=${#PAGES_DISPATCH_TOKEN}"
-          case "$PAGES_DISPATCH_TOKEN" in
+          echo "length=${#token}"
+          case "$token" in
             github_pat_*) echo "prefix=github_pat_ (looks like a fine-grained PAT)" ;;
             ghp_*)        echo "prefix=ghp_ (looks like a classic PAT)" ;;
             *)            echo "prefix=unrecognised" ;;
           esac
-          fi
 
       # Contents: write on the target is what this endpoint requires. The
       # target's own workflow gates the actual publish behind the build, so
