@@ -65,12 +65,28 @@ jobs:
           PAGES_REPO: shwaaa21/shwaaa21.github.io
           PAGES_DEPLOY_KEY: ${{ secrets.PAGES_DEPLOY_KEY }}
         run: |
+          set -euo pipefail
+
           keyfile="$RUNNER_TEMP/deploy_key"
-          # Written via stdin so the key never lands in the shell command line.
+          # Written via env so the key never lands in the shell command line.
           printf '%s\n' "$PAGES_DEPLOY_KEY" > "$keyfile"
           chmod 600 "$keyfile"
 
           export GIT_SSH_COMMAND="ssh -i $keyfile -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
+
+          # Surface setup problems here rather than as an opaque push failure.
+          if [ ! -s "$keyfile" ]; then
+            echo "::error::PAGES_DEPLOY_KEY secret is empty"
+            exit 1
+          fi
+          if ! grep -q "BEGIN OPENSSH PRIVATE KEY" "$keyfile"; then
+            echo "::error::PAGES_DEPLOY_KEY does not look like a private key"
+            exit 1
+          fi
+
+          # Confirms the key authenticates before we rely on it. The SSH host is
+          # just github.com; the repo is selected by the key, not the hostname.
+          ssh -T -i "$keyfile" -o IdentitiesOnly=yes git@github.com || true
 
           # Fresh history each deploy: the Pages repo is a build artifact store,
           # not a source of truth, so old commits carry no value.
