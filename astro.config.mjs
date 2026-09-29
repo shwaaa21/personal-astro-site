@@ -5,13 +5,13 @@ import icon from 'astro-icon'
 import mdx from '@astrojs/mdx'
 import sitemap from '@astrojs/sitemap'
 import tailwindcss from '@tailwindcss/vite'
-import { enhanceConfigForWorkspace } from './scripts/workspace-config.js'
 
 // Vite configuration with path aliases and SCSS settings
 const viteConfig = {
   css: {
     preprocessorOptions: {
       scss: {
+        loadPaths: [fileURLToPath(new URL('./src/assets', import.meta.url))],
         logger: {
           warn: () => {},
         },
@@ -40,7 +40,7 @@ export default defineConfig({
   compressHTML: true,
   site: 'https://jquest.dev',
   integrations: [compress(), icon(), mdx(), sitemap()],
-  vite: enhanceConfigForWorkspace(viteConfig),
+  vite: viteConfig,
   env: {
     schema: {
       BLOG_API_URL: envField.string({

@@ -1,5 +1,7 @@
 # build output
 dist
+packages/*/dist
+packages/*/dist-test
 
 # dependencies
 node_modules/
@@ -22,9 +24,6 @@ yarn-error.log*
 
 # webstorm settings and dictionaries
 .idea
-
-# package lock
-package-lock.json
 
 # astro build files
 .astro

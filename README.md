@@ -22,6 +22,18 @@ This portfolio is built using the excellent [Accessible Astro Starter](https://g
 - Portfolio showcase
 - Contact forms and social sharing
 - SEO optimized with proper meta tags
+- Astro 7 with Tailwind CSS 4
+- TypeScript integration with path aliases and content collections
+- Prettier integration with `prettier-plugin-astro` and `prettier-plugin-tailwind`
+- ESLint integration with strict accessibility settings for `eslint-plugin-jsx-a11y`
+- Markdown and MDX support
+- Modern OKLCH color system with automatic palette generation from primary/secondary colors
+- Atkinson Hyperlegible font for improved readability and accessibility
+- Lucide icon set via `astro-icon` for consistent, friendly icons
+- Outline focus indicator which works on dark and light backgrounds
+- `prefers-reduced-motion` disables animations for users that have this preference turned on
+- Built-in command launcher with keyboard navigation (Cmd/Ctrl+K)
+- Comprehensive SCSS utility classes and CSS custom properties
 
 ## 🎨 Customisations
 

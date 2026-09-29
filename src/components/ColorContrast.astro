@@ -216,7 +216,7 @@ const themes: Theme[] = [
 
     // Process all color items
     function processColorItems(): void {
-      const colorItems: NodeListOf<Element> = document.querySelectorAll('.color-item')
+      const colorItems = document.querySelectorAll('.color-item')
 
       colorItems.forEach((item) => {
         // Get the background color
@@ -258,7 +258,7 @@ const themes: Theme[] = [
 </script>
 
 <style lang="scss">
-  @use '../assets/scss/base/breakpoint' as *;
+  @use 'scss/base/breakpoint' as *;
 
   .color-contrast {
     display: flex;

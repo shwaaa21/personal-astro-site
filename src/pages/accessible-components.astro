@@ -14,6 +14,16 @@ import {
   Card,
   Checkbox,
   DarkMode,
+  DataTable,
+  DataTableHeader,
+  DataTableColumn,
+  DataTableBody,
+  DataTableRow,
+  DataTableCell,
+  DataTableSearch,
+  DataTableInfo,
+  DataTablePagination,
+  Drawer,
   Fieldset,
   Form,
   Heading,
@@ -31,6 +41,9 @@ import {
   TabsTab,
   TabsPanel,
   Textarea,
+  ToastProvider,
+  Tooltip,
+  Switch,
   Video,
 } from 'accessible-astro-components'
 
@@ -42,6 +55,8 @@ const components = [
   { name: 'Button', id: 'button' },
   { name: 'Card', id: 'card' },
   { name: 'Dark mode toggle', id: 'darkmode' },
+  { name: 'DataTable', id: 'data-table' },
+  { name: 'Drawer', id: 'drawer' },
   { name: 'Form', id: 'form' },
   { name: 'Heading', id: 'heading' },
   { name: 'High contrast toggle', id: 'highcontrast' },
@@ -52,8 +67,18 @@ const components = [
   { name: 'Pagination', id: 'pagination' },
   { name: 'Reduced motion toggle', id: 'reducedmotion' },
   { name: 'Skip link', id: 'skiplink' },
+  { name: 'Switch', id: 'switch' },
   { name: 'Tabs', id: 'tabs' },
+  { name: 'Toast', id: 'toast' },
+  { name: 'Tooltip', id: 'tooltip' },
   { name: 'Video', id: 'video' },
+]
+
+const tableProjects = [
+  { name: 'Acme Starter', users: 1280, updated: '2026-02-10' },
+  { name: 'Beacon Dashboard', users: 642, updated: '2026-01-22' },
+  { name: 'Citrine Docs', users: 2890, updated: '2026-02-17' },
+  { name: 'A project with a longer descriptive name', users: 35, updated: '2026-03-01' },
 ]
 ---
 
@@ -78,10 +103,10 @@ const components = [
           <AccordionItem title="First Item">
             <p>
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto quasi nobis optio? Qui in quo
-              accusantium debitis <a href="#">sapiente obcaecati</a> magnam incidunt sit. Molestiae exercitationem quibusdam
-              quod veritatis laboriosam est tenetur.
+              accusantium debitis <a href="#accordion">sapiente obcaecati</a> magnam incidunt sit. Molestiae exercitationem
+              quibusdam quod veritatis laboriosam est tenetur.
             </p>
-            <a href="#">Tab to me!</a>
+            <a href="#accordion">Tab to me!</a>
           </AccordionItem>
           <AccordionItem title="Second Item">
             <p>
@@ -118,10 +143,10 @@ const components = [
           <AccordionItem name="exclusive" title="First Item" variant="chevron">
             <p>
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto quasi nobis optio? Qui in quo
-              accusantium debitis <a href="#">sapiente obcaecati</a> magnam incidunt sit. Molestiae exercitationem quibusdam
-              quod veritatis laboriosam est tenetur.
+              accusantium debitis <a href="#accordion">sapiente obcaecati</a> magnam incidunt sit. Molestiae exercitationem
+              quibusdam quod veritatis laboriosam est tenetur.
             </p>
-            <a href="#">Tab to me!</a>
+            <a href="#accordion">Tab to me!</a>
           </AccordionItem>
           <AccordionItem name="exclusive" title="Second Item" variant="chevron">
             <p>
@@ -342,6 +367,71 @@ const components = [
           <Icon aria-hidden="true" name="lucide:sunset" slot="dark" />
         </DarkMode>
 
+        <Heading level="h2" id="data-table">DataTable</Heading>
+        <p>Search all projects, sort columns, and navigate pages. Long names wrap while column widths remain stable.</p>
+        <DataTable caption="Projects" pageSize={3} style="--data-table-min-width: 32rem">
+          <DataTableSearch slot="search" label="Search projects" />
+          <DataTableInfo slot="info" start={1} end={tableProjects.length} total={tableProjects.length} />
+          <DataTableHeader>
+            <DataTableColumn sortable width="50%">Project</DataTableColumn>
+            <DataTableColumn sortable numeric width="20%">Users</DataTableColumn>
+            <DataTableColumn sortable width="30%">Updated</DataTableColumn>
+          </DataTableHeader>
+          <DataTableBody>
+            {
+              tableProjects.map((project) => (
+                <DataTableRow>
+                  <DataTableCell as="th">{project.name}</DataTableCell>
+                  <DataTableCell numeric sortValue={project.users}>
+                    {project.users.toLocaleString('en-US')}
+                  </DataTableCell>
+                  <DataTableCell sortValue={project.updated}>{project.updated}</DataTableCell>
+                </DataTableRow>
+              ))
+            }
+          </DataTableBody>
+          <DataTablePagination slot="footer" client ariaLabel="Projects pagination" />
+        </DataTable>
+        <p><a href="https://accessible-astro.incluud.dev/components/data-table/">DataTable documentation</a></p>
+
+        <Heading level="h2" id="drawer">Drawer</Heading>
+        <p>
+          The Drawer component displays supplementary content in a modal panel. It traps focus while open and can enter
+          from any edge of the viewport.
+        </p>
+        <Heading level="h3">Default with footer</Heading>
+        <Button id="drawer-default-trigger" aria-haspopup="dialog">Open project drawer</Button>
+        <Drawer triggerId="drawer-default-trigger" title="Project details" showFooter>
+          <p>
+            Use a drawer for supporting information or short tasks that should remain connected to the current page.
+          </p>
+          <ul>
+            <li>Status: In progress</li>
+            <li>Owner: Astro team</li>
+            <li>Due date: 30 September</li>
+          </ul>
+          <Fragment slot="footer">
+            <Button variant="outlined" onclick="closeDrawer()" class:list={'flex-1'}>Cancel</Button>
+            <Button type="primary" onclick="closeDrawer()" class:list={'flex-1'}>Save changes</Button>
+          </Fragment>
+        </Drawer>
+
+        <Heading level="h3">Positions</Heading>
+        <div class="flex flex-wrap gap-2">
+          <Button id="drawer-left-trigger" variant="outlined" aria-haspopup="dialog">Open left</Button>
+          <Button id="drawer-top-trigger" variant="outlined" aria-haspopup="dialog">Open top</Button>
+          <Button id="drawer-bottom-trigger" variant="outlined" aria-haspopup="dialog">Open bottom</Button>
+        </div>
+        <Drawer triggerId="drawer-left-trigger" title="Left drawer" position="left">
+          <p>This drawer enters from the inline-start edge of the viewport.</p>
+        </Drawer>
+        <Drawer triggerId="drawer-top-trigger" title="Top drawer" position="top">
+          <p>This drawer enters from the top edge of the viewport.</p>
+        </Drawer>
+        <Drawer triggerId="drawer-bottom-trigger" title="Bottom drawer" position="bottom">
+          <p>This drawer enters from the bottom edge of the viewport.</p>
+        </Drawer>
+
         <Heading level="h2" id="form">Form</Heading>
         <p>
           The Form component is used to display a form with a name, email, message, and a submit button. It ships with
@@ -523,6 +613,18 @@ const components = [
           first focusable element on the page.
         </p>
 
+        <Heading level="h2" id="switch">Switch</Heading>
+        <p>
+          The Switch component represents an immediate on/off setting. It uses a native checkbox with
+          <code>role="switch"</code>, so it works with forms and can be toggled with the Space key without JavaScript.
+        </p>
+        <Heading level="h3">States</Heading>
+        <div class="flex flex-col gap-4">
+          <Switch id="showcase-notifications" name="notifications" label="Enable notifications" />
+          <Switch id="showcase-weekly-summary" name="weekly-summary" label="Send a weekly summary" checked />
+          <Switch id="showcase-automatic-updates" name="automatic-updates" label="Automatic updates" disabled />
+        </div>
+
         <Heading level="h2" id="tabs">Tabs</Heading>
         <p>The Tabs component is used to display a tabs with a list of tabs and a list of panels.</p>
         <Tabs>
@@ -540,7 +642,7 @@ const components = [
               veritatis laboriosam est tenetur. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed eveniet
               quidem earum at nobis enim.
             </p>
-            <a href="#">Tab to me!</a>
+            <a href="#tabs">Tab to me!</a>
           </TabsPanel>
           <TabsPanel id="panel-2" labelledby="tab-2">
             <Heading level="h3">Second Panel</Heading>
@@ -560,7 +662,7 @@ const components = [
               veritatis laboriosam est tenetur. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed eveniet
               quidem earum at nobis enim.
             </p>
-            <a href="#">Tab to me!</a>
+            <a href="#tabs">Tab to me!</a>
           </TabsPanel>
           <TabsPanel id="panel-3" labelledby="tab-3">
             <Heading level="h3">Third Panel</Heading>
@@ -574,9 +676,67 @@ const components = [
               veritatis optio nulla officia quos cum at ea hic numquam perferendis molestiae! Aperiam quia veritatis
               earum tempora.
             </p>
-            <a href="#">Tab to me!</a>
+            <a href="#tabs">Tab to me!</a>
           </TabsPanel>
         </Tabs>
+
+        <Heading level="h2" id="toast">Toast</Heading>
+        <p>
+          The Toast component provides non-intrusive notifications that appear temporarily. Use the ToastProvider once
+          in your layout and trigger toasts via the global <code>window.toast</code> API.
+        </p>
+        <Heading level="h3">Variants</Heading>
+        <div class="flex flex-wrap gap-2">
+          <Button id="toast-default">Default</Button>
+          <Button id="toast-success" type="success">Success</Button>
+          <Button id="toast-info" type="info">Info</Button>
+          <Button id="toast-warning" type="warning">Warning</Button>
+          <Button id="toast-error" type="error">Error</Button>
+        </div>
+        <Heading level="h3">Persistent</Heading>
+        <div class="flex flex-wrap gap-2">
+          <Button id="toast-persistent">Persistent toast</Button>
+          <Button id="toast-dismiss-all" variant="outlined">Dismiss all</Button>
+        </div>
+        <ToastProvider position="bottom-right" />
+
+        <Heading level="h2" id="tooltip">Tooltip</Heading>
+        <p>
+          The Tooltip component provides contextual helper text with Popover API and CSS Anchor Positioning while
+          keeping interactions keyboard accessible.
+        </p>
+        <Heading level="h3">Default</Heading>
+        <Tooltip id="starter-tooltip-default" triggerLabel="More information about API key">
+          <span>API key help</span>
+          <span slot="tooltip">Find your API key in account settings under Developer Access.</span>
+        </Tooltip>
+
+        <Heading level="h3">Positions</Heading>
+        <div class="align-center flex flex-wrap gap-3">
+          <Tooltip id="starter-tooltip-top" position="top" triggerLabel="Top tooltip example">
+            <span>Top</span>
+            <span slot="tooltip">Tooltip on top (default).</span>
+          </Tooltip>
+          <Tooltip id="starter-tooltip-right" position="right" triggerLabel="Right tooltip example">
+            <span>Right</span>
+            <span slot="tooltip">Tooltip prefers the right side.</span>
+          </Tooltip>
+          <Tooltip id="starter-tooltip-left" position="left" triggerLabel="Left tooltip example">
+            <span>Left</span>
+            <span slot="tooltip">Tooltip prefers the left side.</span>
+          </Tooltip>
+          <Tooltip id="starter-tooltip-bottom" position="bottom" triggerLabel="Bottom tooltip example">
+            <span>Bottom</span>
+            <span slot="tooltip">Tooltip prefers the bottom side.</span>
+          </Tooltip>
+        </div>
+
+        <Heading level="h3">Custom icons</Heading>
+        <Tooltip id="starter-tooltip-custom-icon" triggerLabel="Custom icon tooltip example" showIcon={false}>
+          With custom icon
+          <Icon aria-hidden="true" name="lucide:info" />
+          <span slot="tooltip">Tooltip with custom icon.</span>
+        </Tooltip>
 
         <Heading level="h2" id="video">Video</Heading>
         <p>The Video component is used to display a video with a title and a source.</p>
@@ -629,11 +789,38 @@ const components = [
         const heading = id && document.getElementById(id)
         if (heading) observer.observe(heading)
       })
+
+      // Toast demo handlers
+      document.getElementById('toast-default')?.addEventListener('click', () => {
+        window.toast?.show({ message: 'This is a default notification.' })
+      })
+      document.getElementById('toast-success')?.addEventListener('click', () => {
+        window.toast?.success('Changes saved successfully.')
+      })
+      document.getElementById('toast-info')?.addEventListener('click', () => {
+        window.toast?.info('Your session will refresh in 2 minutes.')
+      })
+      document.getElementById('toast-warning')?.addEventListener('click', () => {
+        window.toast?.warning('Storage is almost full.')
+      })
+      document.getElementById('toast-error')?.addEventListener('click', () => {
+        window.toast?.error('Could not save your changes.')
+      })
+      document.getElementById('toast-persistent')?.addEventListener('click', () => {
+        window.toast?.show({
+          message: 'This toast will stay until dismissed.',
+          type: 'info',
+          duration: 0,
+        })
+      })
+      document.getElementById('toast-dismiss-all')?.addEventListener('click', () => {
+        window.toast?.dismissAll()
+      })
     })
   </script>
 
   <style lang="scss">
-    @use '../assets/scss/base/breakpoint' as *;
+    @use 'scss/base/breakpoint' as *;
 
     .components {
       display: grid;

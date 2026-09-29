@@ -61,13 +61,17 @@ const { class: className } = Astro.props
       if (!mobileNavigation) return
 
       mobileNavigation.classList.toggle('show')
-      mobileNavigation.classList.contains('show') ? openMenu(responsiveToggle) : closeMenu(responsiveToggle)
+      if (mobileNavigation.classList.contains('show')) {
+        openMenu(responsiveToggle)
+      } else {
+        closeMenu(responsiveToggle)
+      }
     })
   })
 </script>
 
 <style lang="scss">
-  @use '../assets/scss/base/breakpoint' as *;
+  @use 'scss/base/breakpoint' as *;
 
   .responsive-toggle {
     display: none;
