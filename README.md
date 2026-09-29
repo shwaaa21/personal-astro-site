@@ -76,37 +76,42 @@ the repo where Pages is enabled:
 
 | Repo | Role |
 | --- | --- |
-| `shwaaa21/personal-astro-site` (here) | Site source. Has a CI workflow that lints and builds on every push. |
-| `shwaaa21/shwaaa21.github.io` | Hosts the Pages site. Has the deploy workflow, which checks out this repo and builds it. |
+| `shwaaa21/personal-astro-site` (here) | Site source. CI lints and builds each push, then notifies the Pages repo. |
+| `shwaaa21/shwaaa21.github.io` | Hosts the Pages site. Checks out this repo, builds it, and publishes. |
 
-The deploy workflow in `shwaaa21.github.io` runs two jobs:
+On a push to `personal-site`:
 
-1. **Build** — checks out `shwaaa21/personal-astro-site`, installs with `npm ci`, runs `npm run build`, and uploads `dist/` as a Pages artifact.
-2. **Deploy** — publishes that artifact via `actions/deploy-pages`.
+1. **`ci.yml`** (here) lints and builds. A failure stops the deploy.
+2. **`deploy.yml`** (here) sends a `repository_dispatch` to the Pages repo.
+3. **`deploy.yml`** (there) receives the dispatch, checks out the exact commit that fired it, builds, and publishes via `actions/upload-pages-artifact` + `actions/deploy-pages`.
 
-The jobs are separate so the deploy only runs once the build succeeds. The `deploy` job is
-pinned to the `github-pages` environment, which is where GitHub tracks the live deployment
-URL.
+The dispatch pins the source checkout to a commit SHA rather than a branch name, so two
+rapid pushes can't race — each deploy builds the commit that triggered it.
 
-There are **no secrets and no deploy key**. The workflow authenticates with a short-lived
-OIDC token minted for this job (`id-token: write`), so there is no stored credential to
-leak, rotate, or expire.
+Publishing itself is authenticated with a short-lived OIDC token (`id-token: write`), so
+the Pages repo holds no stored credential. The one secret involved is a PAT used solely to
+send the cross-repo notification.
 
 `public/CNAME` is copied into the build output and tells GitHub Pages which custom domain
 to serve, which is how `jquest.dev` resolves.
 
-### Deploying
-
-Pushes to `personal-site` here run CI only — they do **not** deploy. To publish a change,
-open a **Run workflow** on the `Deploy to GitHub Pages` workflow in
-`shwaaa21/shwaaa21.github.io` and set the `ref` input to the branch or SHA you want built.
-It defaults to `personal-site`.
-
 ### One-time setup
 
-In `shwaaa21/shwaaa21.github.io` → **Settings → Pages**, set **Source** to **GitHub Actions**
-and confirm the custom domain is `jquest.dev` with a successful DNS check. The workflow
-manages the `github-pages` environment itself.
+1. Create a **fine-grained PAT** at https://github.com/settings/personal-access-tokens/new:
+   - Resource owner: `shwaaa21`
+   - Repository access: **Only select repositories** → `shwaaa21.github.io`
+   - Permissions → Repository permissions → **Actions: Read and write**
+   - Metadata: Read-only (selected automatically)
+2. Add it as a repository secret named **`PAGES_DISPATCH_TOKEN`** on this repo.
+3. In `shwaaa21/shwaaa21.github.io` → **Settings → Pages**, confirm **Source** is
+   **GitHub Actions** and the custom domain `jquest.dev` has a passing DNS check.
+
+Until the secret is set, pushes still pass CI and the deploy step is skipped with a
+notice, so nothing goes red while you're setting it up. Deploys are also available by hand
+from the Pages repo's Actions tab at any time.
+
+The PAT is the only credential left to rotate. Give it the shortest expiry you can live
+with and note the date.
 
 ### Adding a route
 

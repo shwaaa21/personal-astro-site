@@ -290,22 +290,26 @@ Projects are MDX content in `src/content/projects/`:
 This site is **deployed** to https://jquest.dev via GitHub Pages. See the README's
 Deployment section for full detail. The essentials:
 
-- **This repo is source only.** GitHub only accepts Pages deployments from the repo where
-  Pages is enabled, so this repo cannot deploy. `.github/workflows/ci.yml` lints and
-  builds on push and PR, and nothing more.
-- **The deploy workflow lives in `shwaaa21/shwaaa21.github.io`**, at
-  `.github/workflows/deploy.yml`. It checks out this repo, builds it, and publishes the
-  artifact via `upload-pages-artifact` + `deploy-pages`.
-- **Deploys are manual** — Actions → Deploy to GitHub Pages → Run workflow, with a `ref`
-  input (defaults to `personal-site`). Pushing here does not deploy.
-- **Auth:** OIDC via `id-token: write`. No secrets, no deploy key.
+- **Publishing lives in `shwaaa21/shwaaa21.github.io`**, because the Pages API only
+  accepts deployments from the repo where Pages is enabled. Its `deploy.yml` checks out
+  this repo, builds it, and publishes via `upload-pages-artifact` + `deploy-pages`.
+- **This repo triggers it.** `.github/workflows/ci.yml` lints and builds on push and PR;
+  `.github/workflows/deploy.yml` then sends a `repository_dispatch` to the Pages repo.
+- **A push to `personal-site` deploys automatically.** No manual step.
+- **Two credentials, neither of them an SSH key:** the Pages repo publishes via an OIDC
+  token (`id-token: write`), and the `PAGES_DISPATCH_TOKEN` secret here is a fine-grained
+  PAT with `Actions: Read and write` on the Pages repo, used only to send the dispatch.
 - **Custom domain:** `public/CNAME` is copied into the build so Pages serves `jquest.dev`.
 
-When changing deployment config, remember the split: anything that decides *what gets
-published* goes in the Pages repo, anything that decides *what the site is* goes here. A
-workflow left in this repo that calls `deploy-pages` will fail with
-`Failed to create deployment (status: 404)` — that error means the deploy is running in
-the wrong repository, not that Pages is broken.
+Two traps worth remembering, both hit while setting this up:
+
+- A workflow in *this* repo that calls `deploy-pages` fails with
+  `Failed to create deployment (status: 404)`. That means the deploy is running in the
+  wrong repository, not that Pages is broken.
+- `secrets.*` cannot be used in an `if:` condition at any scope; the parser rejects the
+  workflow. Presence checks have to happen in a step's `env:` and publish a step output
+  for the gating step to read. `deploy.yml` here uses that pattern so a missing PAT
+  skips rather than failing every push.
 
 ### Build Configuration
 

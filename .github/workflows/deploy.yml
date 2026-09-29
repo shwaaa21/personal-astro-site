@@ -1,0 +1,57 @@
+name: Deploy
+
+# Publishing is driven from here, but the deploy workflow itself has to live in
+# shwaaa21/shwaaa21.github.io because the Pages API only accepts deployments
+# from the repo where Pages is enabled. This workflow's job is to tell that repo
+# a new commit is ready.
+on:
+  push:
+    branches:
+      - personal-site
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One dispatch in flight at a time. queue rather than cancel: a superseded run
+# still has a live Pages deployment to finish.
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    name: Notify Pages repo
+    runs-on: ubuntu-latest
+    steps:
+      # secrets.* is not available in an if: condition at any scope, so the
+      # presence check happens here, in a step's env, and publishes an output
+      # the dispatch step can gate on. Without this the workflow file is
+      # rejected outright, and a missing token fails every push.
+      - name: Check whether the dispatch token is configured
+        id: pat
+        env:
+          PAGES_DISPATCH_TOKEN: ${{ secrets.PAGES_DISPATCH_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -n "$PAGES_DISPATCH_TOKEN" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Deploy::PAGES_DISPATCH_TOKEN is not set, so pushes will not deploy automatically. Add a fine-grained PAT with Actions: Read and write on shwaaa21/shwaaa21.github.io, or deploy by hand from that repo's Actions tab."
+          fi
+
+      # Contents: write on the target is what this endpoint requires. The
+      # target's own workflow gates the actual publish behind the build, so
+      # there is no way to deploy a commit that does not compile.
+      - name: Dispatch pages-deploy
+        if: steps.pat.outputs.configured == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.PAGES_DISPATCH_TOKEN }}
+        run: |
+          set -euo pipefail
+          gh api repos/shwaaa21/shwaaa21.github.io/dispatches \
+            --method POST \
+            --field event_type=pages-deploy \
+            --field "client_payload[ref]=${GITHUB_REF_NAME}" \
+            --field "client_payload[sha]=${GITHUB_SHA}"
