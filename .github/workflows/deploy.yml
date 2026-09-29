@@ -57,15 +57,20 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      # Uses a deploy key stored as the PAGES_DEPLOY_KEY secret, written to a
-      # temporary path and removed at the end of the job.
+      # The deploy key comes from the PAGES_DEPLOY_KEY secret, written to a
+      # temporary file that is removed at the end of the job. GIT_SSH_COMMAND
+      # points git at it; without this the push has no key for the Pages repo.
       - name: Push to Pages repo
         env:
           PAGES_REPO: shwaaa21/shwaaa21.github.io
+          PAGES_DEPLOY_KEY: ${{ secrets.PAGES_DEPLOY_KEY }}
         run: |
           keyfile="$RUNNER_TEMP/deploy_key"
-          printf '%s\n' "${{ secrets.PAGES_DEPLOY_KEY }}" > "$keyfile"
+          # Written via stdin so the key never lands in the shell command line.
+          printf '%s\n' "$PAGES_DEPLOY_KEY" > "$keyfile"
           chmod 600 "$keyfile"
+
+          export GIT_SSH_COMMAND="ssh -i $keyfile -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
 
           # Fresh history each deploy: the Pages repo is a build artifact store,
           # not a source of truth, so old commits carry no value.
@@ -74,8 +79,7 @@ jobs:
           git checkout -q -b main
           git add -A
           git commit -q -m "Deploy ${GITHUB_SHA::8}"
-          git push -q --force \
-            "git@github.com:${PAGES_REPO}.git" main
+          git push --force "git@github.com:${PAGES_REPO}.git" main
 
           rm -f "$keyfile"
 
