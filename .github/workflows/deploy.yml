@@ -65,14 +65,34 @@ jobs:
         run: |
           set -uo pipefail
 
-          # Capture stderr and the status code rather than letting gh exit
-          # silently: a 403 from a mis-scoped token and a 422 from a workflow
-          # file that predates an input both fail this step, and only the
-          # response body says which. The body can contain no secret, only
-          # GitHub's own error text, so it is safe to surface.
+          target="shwaaa21/shwaaa21.github.io"
           out="$(mktemp)"
+
+          # Probe the token's reach before dispatching. A 403 on the dispatch
+          # alone is ambiguous between "no Actions: write", "this repo is not
+          # in the token's repository access list", and "wrong owner". Each
+          # probe below isolates one of those, so the next failure is
+          # actionable without guessing.
+          {
+            echo "### Token reach"
+            echo
+            for spec in \
+              "GET|/repos/${target}|repo visible" \
+              "GET|/repos/${target}/actions/workflows|actions read" \
+              "GET|/repos/${target}/actions/workflows/deploy.yml|workflow file"
+            do
+              method="${spec%%|*}"
+              rest="${spec#*|}"
+              path="${rest%%|*}"
+              label="${rest#*|}"
+              code="$(gh api --method "$method" "$path" >/dev/null 2>&1 && echo ok || echo "FAIL $?")"
+              echo "- \`$label\`: $code"
+            done
+            echo
+          } >> "$GITHUB_STEP_SUMMARY"
+
           status=0
-          gh api "repos/shwaaa21/shwaaa21.github.io/actions/workflows/deploy.yml/dispatches" \
+          gh api "repos/${target}/actions/workflows/deploy.yml/dispatches" \
             --method POST \
             --field ref=main \
             --field "inputs[ref]=${GITHUB_REF_NAME}" \
@@ -82,7 +102,7 @@ jobs:
             echo "### Trigger result"
             echo
             echo "- status: \`$status\`"
-            echo "- endpoint: \`POST /repos/shwaaa21/shwaaa21.github.io/actions/workflows/deploy.yml/dispatches\`"
+            echo "- endpoint: \`POST /repos/${target}/actions/workflows/deploy.yml/dispatches\`"
             echo "- token: ${#GH_TOKEN} chars, $(case "$GH_TOKEN" in github_pat_*) echo fine-grained ;; ghp_*) echo classic ;; *) echo unrecognised ;; esac)"
             echo
             echo '```'
