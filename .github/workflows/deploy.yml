@@ -40,6 +40,16 @@ jobs:
             echo "configured=false" >> "$GITHUB_OUTPUT"
             echo "::notice title=Deploy::PAGES_DISPATCH_TOKEN is not set, so pushes will not deploy automatically. Add a fine-grained PAT with Actions: Read and write on shwaaa21/shwaaa21.github.io, or deploy by hand from that repo's Actions tab."
           fi
+          # Shape only, never any part of the token itself, so a run can
+          # distinguish a missing secret from a malformed value. Only the
+          # length and the recognised prefix are reported.
+          echo "length=${#PAGES_DISPATCH_TOKEN}"
+          case "$PAGES_DISPATCH_TOKEN" in
+            github_pat_*) echo "prefix=github_pat_ (looks like a fine-grained PAT)" ;;
+            ghp_*)        echo "prefix=ghp_ (looks like a classic PAT)" ;;
+            *)            echo "prefix=unrecognised" ;;
+          esac
+          fi
 
       # Contents: write on the target is what this endpoint requires. The
       # target's own workflow gates the actual publish behind the build, so
